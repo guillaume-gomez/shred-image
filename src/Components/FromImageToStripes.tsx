@@ -1,18 +1,25 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { shuffle } from "lodash";
 
+interface FromImageToStripesProps {
+  nbStripes: number;
+  onChangeStripe: (base64Stripes : string[]) => void;
+}
 
-function FromImageToStripes() {
+function FromImageToStripes( { nbStripes, onChangeStripe } : FromImageToStripesProps ) {
   const refCanvas = useRef<HTMLCanvasElement>(null);
   const refImage = useRef<HTMLImageElement>(null);
-  const [nbStripes, setNbStripes] = useState<number>(12);
-  const [stripes, setStripes] = useState<string[]>([]);
+ 
+  useEffect(() => {
+    if(refImage.current && refImage.current.src) {
+      cutImageIntoStripes();
+    }
+  }, [nbStripes])
 
   function loadImage(event: React.ChangeEvent<HTMLInputElement>) {
     if(event && event.target && event.target.files && refImage.current) {
       refImage.current.src = URL.createObjectURL(event.target.files[0]);
       refImage.current.onload =  (event: any) => {
-        console.log("j'aime la bite")
         cutImageIntoStripes();
       };
     }
@@ -54,7 +61,7 @@ function FromImageToStripes() {
       );
       stripes.push(refCanvas.current.toDataURL());
     }
-    setStripes(stripes);
+    onChangeStripe(shuffle(stripes));
   }
 
   return (
@@ -70,9 +77,6 @@ function FromImageToStripes() {
         className="hidden"
         ref={refCanvas}
       />
-      {
-        stripes.map(stripe =>  <img src={stripe} />)
-      }
     </>
   );
 }
