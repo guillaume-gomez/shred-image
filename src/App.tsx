@@ -48,6 +48,7 @@ function App() {
       />
       <button className="btn btn-primary" onClick={() => setStripes(shuffle(stripes))}>Shuffle</button>
       <FromImageToStripes
+        graScale={true}
         nbStripes={nbStripes}
         onChangeStripe={onChangeStripe}
       />

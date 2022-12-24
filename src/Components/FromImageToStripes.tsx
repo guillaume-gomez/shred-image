@@ -1,12 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { shuffle } from "lodash";
 
 interface FromImageToStripesProps {
   nbStripes: number;
+  graScale: boolean;
   onChangeStripe: (base64Stripes : string[]) => void;
 }
 
-function FromImageToStripes( { nbStripes, onChangeStripe } : FromImageToStripesProps ) {
+function FromImageToStripes( { nbStripes, onChangeStripe, graScale } : FromImageToStripesProps ) {
   const refCanvas = useRef<HTMLCanvasElement>(null);
   const refImage = useRef<HTMLImageElement>(null);
  
@@ -59,10 +59,32 @@ function FromImageToStripes( { nbStripes, onChangeStripe } : FromImageToStripesP
         refCanvas.current.width,
         refCanvas.current.height
       );
+
+      if(graScale) {
+       convertToGrayScale(context, refCanvas.current.width, refCanvas.current.height);
+      }
       stripes.push(refCanvas.current.toDataURL());
     }
-    onChangeStripe(shuffle(stripes));
+    onChangeStripe(stripes);
   }
+
+  function convertToGrayScale(context: CanvasRenderingContext2D, width: number, height: number) {
+    const imageData = context.getImageData(0, 0, width, height);
+    for (let i = 0; i < imageData.data.length; i += 4) {
+     const red = imageData.data[i];
+     const green = imageData.data[i + 1];
+     const blue = imageData.data[i + 2];
+     // use gimp algorithm to generate prosper grayscale
+     const gray = (red * 0.3 + green * 0.59 + blue * 0.11);
+
+     imageData.data[i] = gray;
+     imageData.data[i + 1] = gray;
+     imageData.data[i + 2] = gray;
+     imageData.data[i + 3] = 255;
+    }
+    context.putImageData(imageData, 0, 0);
+  }
+
 
   return (
     <>

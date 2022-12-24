@@ -23,7 +23,7 @@ function CanvasRendering({ stripes, nbStripes, width, height } : CanvasRendering
       console.log("Could not find context")
       return;
     }
-
+    
     const stripeWidth = width / nbStripes;
     context.clearRect(0,0, width, height);
 
