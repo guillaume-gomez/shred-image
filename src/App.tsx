@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { shuffle } from "lodash";
+
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
 import FromImageToStripes from "./Components/FromImageToStripes";
@@ -10,7 +12,9 @@ import './App.css';
 function App() {
   const [nbStripes, setNbStripes] = useState<number>(12);
   const [stripes, setStripes] = useState<string[]>([]);
-  
+  const [width, setWidth] = useState<number>(500);
+  const [height, setHeight] = useState<number>(500);
+
   function onChangeStripe(base64Stripes: string[]) {
     setStripes(base64Stripes);
   }
@@ -26,13 +30,30 @@ function App() {
         onChange={(e) => setNbStripes(parseInt(e.target.value))}
         className="range range-primary"
       />
+      <input 
+        type="range"
+        min="100"
+        max="1920"
+        value={width}
+        onChange={(e) => setWidth(parseInt(e.target.value))}
+        className="range range-primary"
+      />
+      <input 
+        type="range"
+        min="100"
+        max="1080"
+        value={height}
+        onChange={(e) => setHeight(parseInt(e.target.value))}
+        className="range range-primary"
+      />
+      <button className="btn btn-primary" onClick={() => setStripes(shuffle(stripes))}>Shuffle</button>
       <FromImageToStripes
         nbStripes={nbStripes}
         onChangeStripe={onChangeStripe}
       />
       <CanvasRendering
-        width={500}
-        height={500}
+        width={width}
+        height={height}
         nbStripes={nbStripes}
         stripes={stripes}
       />
