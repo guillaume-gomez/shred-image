@@ -2,12 +2,11 @@ import React, { useEffect, useRef } from 'react';
 
 interface CanvasRenderingProps {
   stripes: string[];
-  nbStripes:number;
   width: number;
   height: number;
 }
 
-function CanvasRendering({ stripes, nbStripes, width, height } : CanvasRenderingProps) {
+function CanvasRendering({ stripes, width, height } : CanvasRenderingProps) {
   const refCanvas = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -24,7 +23,7 @@ function CanvasRendering({ stripes, nbStripes, width, height } : CanvasRendering
       return;
     }
     
-    const stripeWidth = width / nbStripes;
+    const stripeWidth = width / stripes.length;
     context.clearRect(0,0, width, height);
 
     stripes.map((stripe, index) => {
@@ -43,7 +42,7 @@ function CanvasRendering({ stripes, nbStripes, width, height } : CanvasRendering
         height
       );
     });
-  }, [stripes, nbStripes, width, height]);
+  }, [stripes, width, height]);
 
 
   return (

@@ -5,6 +5,7 @@ import Header from "./Components/Header";
 import Footer from "./Components/Footer";
 import FromImageToStripes from "./Components/FromImageToStripes";
 import CanvasRendering from "./Components/CanvasRendering";
+import ThreeJsRendering from "./Components/ThreeJsRendering";
 
 import './App.css';
 
@@ -14,6 +15,7 @@ function App() {
   const [stripes, setStripes] = useState<string[]>([]);
   const [width, setWidth] = useState<number>(500);
   const [height, setHeight] = useState<number>(500);
+  const [grayScale, setGrayScale] = useState<boolean>(false);
 
   function onChangeStripe(base64Stripes: string[]) {
     setStripes(base64Stripes);
@@ -48,16 +50,22 @@ function App() {
       />
       <button className="btn btn-primary" onClick={() => setStripes(shuffle(stripes))}>Shuffle</button>
       <FromImageToStripes
-        graScale={true}
+        graScale={grayScale}
         nbStripes={nbStripes}
         onChangeStripe={onChangeStripe}
       />
       <CanvasRendering
         width={width}
         height={height}
-        nbStripes={nbStripes}
         stripes={stripes}
       />
+      <div style={{height: 800}}>
+        <ThreeJsRendering
+          width={width}
+          height={height}
+          stripes={stripes}
+        />
+      </div>
       <Footer />
     </div>
   );
