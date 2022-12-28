@@ -11,7 +11,7 @@ function FromImageToStripes( { nbStripes, onChangeStripe, graScale } : FromImage
   const refImage = useRef<HTMLImageElement>(null);
  
   useEffect(() => {
-    if(refImage.current && refImage.current.src) {
+    if(refImage.current && !!refImage.current.src) {
       cutImageIntoStripes();
     }
   }, [nbStripes])
@@ -94,7 +94,7 @@ function FromImageToStripes( { nbStripes, onChangeStripe, graScale } : FromImage
         className="file-input file-input-bordered file-input-primary w-full max-w-xs"
         onChange={loadImage}
       />
-      <img ref={refImage} />
+      <img className="hidden" ref={refImage} />
       <canvas
         className="hidden"
         ref={refCanvas}
