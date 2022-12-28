@@ -29,18 +29,20 @@ function CanvasRendering({ stripes, width, height } : CanvasRenderingProps) {
     stripes.map((stripe, index) => {
       let image = new Image();
       image.src = stripe;
+      image.onload = () => {
+        context.drawImage(
+          image,
+          0,
+          0,
+          image.width,
+          image.height,
+          index * stripeWidth,
+          0,
+          stripeWidth,
+          height
+        );
+      }
 
-      context.drawImage(
-        image,
-        0,
-        0,
-        image.width,
-        image.height,
-        index * stripeWidth,
-        0,
-        stripeWidth,
-        height
-      );
     });
   }, [stripes, width, height]);
 
