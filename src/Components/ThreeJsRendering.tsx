@@ -12,14 +12,20 @@ interface ThreejsRenderingProps {
 }
 
 function ThreejsRendering({ stripes, width, height } : ThreejsRenderingProps) {
-  const widthStripe = useMemo(() => width/stripes.length, [width, stripes]);
+  const widthStripe = useMemo(() => (width/stripes.length)/width, [width, stripes]);
   if(stripes.length === 0) {
-    return <p>J'ai rien à rendre mon gars</p>
+    return <p>Nothing to render</p>
   }
 
+  console.log(widthStripe/width);
+
   return (
-    <Canvas>
-      <color attach="background" args={['#DDEE00']} />
+    <Canvas
+      camera={{ position: [0, 0.0, 1.5], fov: 75, far: 5 }}
+      dpr={window.devicePixelRatio}
+      style={{width, height }}
+    >
+      <color attach="background" args={['#DD6E70']} />
       <OrbitControls makeDefault />
       {/*<ambientLight />*/}
       <pointLight position={[10, 10, 10]} />
@@ -28,9 +34,9 @@ function ThreejsRendering({ stripes, width, height } : ThreejsRenderingProps) {
           return <ThreeJsStripe
                     key={index}
                     widthStripe={widthStripe}
-                    heightStripe={height}
+                    heightStripe={height/height}
                     base64Texture={stripe}
-                    meshProps={{position:[index, 0, Math.random()]}}
+                    meshProps={{position:[-0.5 + index * widthStripe, 0, 0]}}
                  />
         })
       }

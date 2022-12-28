@@ -25,16 +25,12 @@ function ThreeJsStripe({meshProps, base64Texture, widthStripe, heightStripe}: Th
     return <></>;
   }
 
-    //console.log("width ", width)
-  //console.log("height ", heightStripe/height)
-
-
   return (
     <mesh
       {...meshProps}
       ref={mesh}
     >
-      <boxGeometry args={[1, 10, 0.1]} />
+      <boxGeometry args={[widthStripe, heightStripe, 0.1]} />
       <meshStandardMaterial map={texture} /*color={hovered ? 'hotpink' : 'orange'}*/ />
     </mesh>
   )
