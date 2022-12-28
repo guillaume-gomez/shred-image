@@ -59,13 +59,11 @@ function App() {
         height={height}
         stripes={stripes}
       />
-      <div style={{height: 800}}>
-        <ThreeJsRendering
-          width={width}
-          height={height}
-          stripes={stripes}
-        />
-      </div>
+      <ThreeJsRendering
+        width={width}
+        height={height}
+        stripes={stripes}
+      />
       <Footer />
     </div>
   );
