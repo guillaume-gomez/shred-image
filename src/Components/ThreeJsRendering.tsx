@@ -17,11 +17,9 @@ function ThreejsRendering({ stripes, width, height } : ThreejsRenderingProps) {
     return <p>Nothing to render</p>
   }
 
-  console.log(widthStripe/width);
-
   return (
     <Canvas
-      camera={{ position: [0, 0.0, 1.5], fov: 75, far: 5 }}
+      camera={{ position: [0, 0.0, 1], fov: 75, far: 5 }}
       dpr={window.devicePixelRatio}
       style={{width, height }}
     >
