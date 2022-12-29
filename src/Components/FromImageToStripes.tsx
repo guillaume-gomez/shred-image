@@ -14,7 +14,7 @@ function FromImageToStripes( { nbStripes, onChangeStripe, graScale } : FromImage
     if(refImage.current && !!refImage.current.src) {
       cutImageIntoStripes();
     }
-  }, [nbStripes])
+  }, [nbStripes, graScale])
 
   function loadImage(event: React.ChangeEvent<HTMLInputElement>) {
     if(event && event.target && event.target.files && refImage.current) {

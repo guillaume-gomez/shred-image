@@ -16,6 +16,7 @@ function App() {
   const [width, setWidth] = useState<number>(500);
   const [height, setHeight] = useState<number>(500);
   const [grayScale, setGrayScale] = useState<boolean>(false);
+  const [threeJsMode, setThreeJsMode] = useState<boolean>(false);
 
   function onChangeStripe(base64Stripes: string[]) {
     setStripes(base64Stripes);
@@ -49,21 +50,46 @@ function App() {
         className="range range-primary"
       />
       <button className="btn btn-primary" onClick={() => setStripes(shuffle(stripes))}>Shuffle</button>
+      <div className="form-control">
+        <label className="label cursor-pointer">
+          <span className="label-text">3D</span>
+          <input
+            type="checkbox"
+            className="toggle toggle-primary"
+            onChange={() => setThreeJsMode(!threeJsMode)}
+            checked={threeJsMode}
+          />
+        </label>
+      </div>
+      <div className="form-control">
+        <label className="label cursor-pointer">
+          <span className="label-text">GrayScale</span>
+          <input
+            type="checkbox"
+            className="toggle toggle-primary"
+            onChange={() => setGrayScale(!grayScale)}
+            checked={grayScale}
+          />
+        </label>
+      </div>
       <FromImageToStripes
         graScale={grayScale}
         nbStripes={nbStripes}
         onChangeStripe={onChangeStripe}
       />
-      <CanvasRendering
-        width={width}
-        height={height}
-        stripes={stripes}
-      />
-      <ThreeJsRendering
-        width={width}
-        height={height}
-        stripes={stripes}
-      />
+      {
+        threeJsMode ?
+        <ThreeJsRendering
+          width={width}
+          height={height}
+          stripes={stripes}
+        /> :
+        <CanvasRendering
+          width={width}
+          height={height}
+          stripes={stripes}
+        />
+      }
       <Footer />
     </div>
   );
