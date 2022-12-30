@@ -2,6 +2,7 @@ import React, { useRef, useState, useMemo } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame, ThreeElements } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
+import { useFullscreen } from "rooks";
 import ThreeJsStripe from "./ThreeJsStripe";
 
 
@@ -14,6 +15,8 @@ interface ThreejsRenderingProps {
 }
 
 function ThreejsRendering({ stripes, padding, width, height, depth } : ThreejsRenderingProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { toggleFullscreen } = useFullscreen({ target: canvasRef });
   const totalPadding = useMemo(() => stripes.length * padding, [stripes, padding]);
   const normelizedPadding =useMemo(() => padding/width, [padding, width]);
   const widthStripe = useMemo(() => ((width - totalPadding)/stripes.length)/width, [width, stripes]);
@@ -34,7 +37,9 @@ function ThreejsRendering({ stripes, padding, width, height, depth } : ThreejsRe
     <Canvas
       camera={{ position: [0, 0.0, 1], fov: 75, far: 5 }}
       dpr={window.devicePixelRatio}
-      style={{width, height }}
+      onDoubleClick={toggleFullscreen}
+      ref={canvasRef}
+      style={{width, height}}
     >
       <color attach="background" args={['#DD6E70']} />
       <OrbitControls makeDefault />

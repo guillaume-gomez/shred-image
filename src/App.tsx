@@ -42,7 +42,7 @@ function App() {
   return (
     <div className="flex flex-col gap-7 bg-base-200">
       <Header />
-      <div className="flex md:flex-row flex-col gap-5">
+      <div className="p-5 flex md:flex-row flex-col gap-5">
         <Card title="Settings">
           <FromImageToStripes
             graScale={grayScale}
@@ -112,24 +112,26 @@ function App() {
             <button className="btn btn-primary" onClick={() => setStripes(shuffle(stripes))}>Shuffle</button>
             <button className="btn btn-secondary" onClick={() => sortStripes()}>Sort</button>
          </Card>
-         <Card title="Result">
-          {
-            threeJsMode ?
-            <ThreeJsRendering
-              padding={padding}
-              width={width}
-              height={height}
-              stripes={base64Stripes}
-              depth={depth}
-            /> :
-            <CanvasRendering
-              padding={padding}
-              width={width}
-              height={height}
-              stripes={base64Stripes}
-            />
-          }
-          </Card>
+         <div className="flex-grow">
+           <Card title="Result">
+            {
+              threeJsMode ?
+              <ThreeJsRendering
+                padding={padding}
+                width={width}
+                height={height}
+                stripes={base64Stripes}
+                depth={depth}
+              /> :
+              <CanvasRendering
+                padding={padding}
+                width={width}
+                height={height}
+                stripes={base64Stripes}
+              />
+            }
+            </Card>
+           </div>
        </div>
       <Footer />
     </div>
