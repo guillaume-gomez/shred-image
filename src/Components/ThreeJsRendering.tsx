@@ -10,9 +10,10 @@ interface ThreejsRenderingProps {
   padding:number;
   width: number;
   height: number;
+  depth: number;
 }
 
-function ThreejsRendering({ stripes, padding, width, height } : ThreejsRenderingProps) {
+function ThreejsRendering({ stripes, padding, width, height, depth } : ThreejsRenderingProps) {
   const totalPadding = useMemo(() => stripes.length * padding, [stripes, padding]);
   const normelizedPadding =useMemo(() => padding/width, [padding, width]);
   const widthStripe = useMemo(() => ((width - totalPadding)/stripes.length)/width, [width, stripes]);
@@ -22,7 +23,12 @@ function ThreejsRendering({ stripes, padding, width, height } : ThreejsRendering
     return <p>Nothing to render</p>
   }
 
-  console.log(widthStripes/2)
+  function randomRange(min :number, max : number) {
+    const sign = Math.random() >= 0.5 ? -1 : 1;
+    return (Math.random() * (( max - min ) + min)) * sign;
+  }
+
+  console.log(randomRange(-depth, depth));
 
   return (
     <Canvas
@@ -45,7 +51,7 @@ function ThreejsRendering({ stripes, padding, width, height } : ThreejsRendering
                       widthStripe={widthStripe}
                       heightStripe={height/height}
                       base64Texture={stripe}
-                      meshProps={{position:[(index * (widthStripe + normelizedPadding)), 0, 0]}}
+                      meshProps={{position:[(index * (widthStripe + normelizedPadding)), 0, randomRange(0, depth)]}}
                    />
           })
         }

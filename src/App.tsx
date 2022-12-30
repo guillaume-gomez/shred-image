@@ -22,6 +22,7 @@ function App() {
   const [width, setWidth] = useState<number>(500);
   const [height, setHeight] = useState<number>(500);
   const [padding, setPadding] = useState<number>(4);
+  const [depth, setDepth] = useState<number>(0.2);
   const [grayScale, setGrayScale] = useState<boolean>(false);
   const [threeJsMode, setThreeJsMode] = useState<boolean>(false);
   const base64Stripes = useMemo(() => stripes.map(stripe => stripe.base64Data), [stripes]);
@@ -76,6 +77,16 @@ function App() {
               onChange={(newValue) => setPadding(newValue)}
               label="Spacing"
             />
+            <Slider
+              min={0}
+              max={2}
+              step={0.01}
+              value={depth}
+              onChange={(newValue) => setDepth(newValue)}
+              label="Depth (3d only)"
+              float={true}
+              disabled={!threeJsMode}
+            />
             <div className="form-control">
               <label className="label cursor-pointer">
                 <span className="label-text">3D</span>
@@ -109,6 +120,7 @@ function App() {
               width={width}
               height={height}
               stripes={base64Stripes}
+              depth={depth}
             /> :
             <CanvasRendering
               padding={padding}
