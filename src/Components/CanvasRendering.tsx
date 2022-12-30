@@ -2,11 +2,12 @@ import React, { useEffect, useRef } from 'react';
 
 interface CanvasRenderingProps {
   stripes: string[];
+  padding: number;
   width: number;
   height: number;
 }
 
-function CanvasRendering({ stripes, width, height } : CanvasRenderingProps) {
+function CanvasRendering({ stripes, padding, width, height } : CanvasRenderingProps) {
   const refCanvas = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -16,14 +17,41 @@ function CanvasRendering({ stripes, width, height } : CanvasRenderingProps) {
     }
     refCanvas.current.width = width;
     refCanvas.current.height = height;
+
+  }, [width, height]);
+
+  useEffect(() => {
+    if(!refCanvas || !refCanvas.current) {
+      console.error("Cannot find the canvas in CanvasRendering");
+      return;
+    }
     const context = refCanvas.current.getContext("2d");
 
     if(!context) {
       console.log("Could not find context")
       return;
     }
-    
-    const stripeWidth = width / stripes.length;
+    render(context, stripes);
+  }, [stripes, width, height]);
+
+  useEffect(() => {
+    if(!refCanvas || !refCanvas.current) {
+      console.error("Cannot find the canvas in CanvasRendering");
+      return;
+    }
+    const context = refCanvas.current.getContext("2d");
+
+    if(!context) {
+      console.log("Could not find context")
+      return;
+    }
+    render(context, stripes);
+  }, [padding])
+
+
+  function render(context : CanvasRenderingContext2D, stripes: string[]): void {
+    const totalPadding = stripes.length * padding;
+    const stripeWidth = (width - totalPadding) / stripes.length;
     context.clearRect(0,0, width, height);
 
     stripes.map((stripe, index) => {
@@ -36,15 +64,14 @@ function CanvasRendering({ stripes, width, height } : CanvasRenderingProps) {
           0,
           image.width,
           image.height,
-          index * stripeWidth,
+          index * (stripeWidth + padding),
           0,
           stripeWidth,
           height
         );
       }
-
     });
-  }, [stripes, width, height]);
+  }
 
 
   return (
