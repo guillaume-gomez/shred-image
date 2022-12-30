@@ -7,15 +7,22 @@ import ThreeJsStripe from "./ThreeJsStripe";
 
 interface ThreejsRenderingProps {
   stripes: string[];
+  padding:number;
   width: number;
   height: number;
 }
 
-function ThreejsRendering({ stripes, width, height } : ThreejsRenderingProps) {
-  const widthStripe = useMemo(() => (width/stripes.length)/width, [width, stripes]);
+function ThreejsRendering({ stripes, padding, width, height } : ThreejsRenderingProps) {
+  const totalPadding = useMemo(() => stripes.length * padding, [stripes, padding]);
+  const normelizedPadding =useMemo(() => padding/width, [padding, width]);
+  const widthStripe = useMemo(() => ((width - totalPadding)/stripes.length)/width, [width, stripes]);
+  const widthStripes = useMemo(() => stripes.length *(widthStripe + normelizedPadding), [stripes, widthStripe, normelizedPadding]);
+  
   if(stripes.length === 0) {
     return <p>Nothing to render</p>
   }
+
+  console.log(widthStripes/2)
 
   return (
     <Canvas
@@ -27,17 +34,22 @@ function ThreejsRendering({ stripes, width, height } : ThreejsRenderingProps) {
       <OrbitControls makeDefault />
       {/*<ambientLight />*/}
       <pointLight position={[10, 10, 10]} />
-      {
-        stripes.map((stripe, index) => {
-          return <ThreeJsStripe
-                    key={index}
-                    widthStripe={widthStripe}
-                    heightStripe={height/height}
-                    base64Texture={stripe}
-                    meshProps={{position:[-0.5 + index * widthStripe, 0, 0]}}
-                 />
-        })
-      }
+      <group
+        position={[-0.5
+          , 0, 0]}
+      >
+        {
+          stripes.map((stripe, index) => {
+            return <ThreeJsStripe
+                      key={index}
+                      widthStripe={widthStripe}
+                      heightStripe={height/height}
+                      base64Texture={stripe}
+                      meshProps={{position:[(index * (widthStripe + normelizedPadding)), 0, 0]}}
+                   />
+          })
+        }
+      </group>
     </Canvas>
   );
 }
