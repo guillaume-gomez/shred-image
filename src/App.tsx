@@ -79,8 +79,8 @@ function App() {
             />
             <Slider
               min={0}
-              max={2}
-              step={0.01}
+              max={1}
+              step={0.001}
               value={depth}
               onChange={(newValue) => setDepth(newValue)}
               label="Depth (3d only)"
