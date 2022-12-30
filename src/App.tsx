@@ -1,95 +1,124 @@
-import React, { useState } from 'react';
-import { shuffle } from "lodash";
+import React, { useState, useMemo } from 'react';
+import { shuffle, sortBy } from "lodash";
 
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
+import Slider from "./Components/Slider";
+import Card from "./Components/Card";
 import FromImageToStripes from "./Components/FromImageToStripes";
 import CanvasRendering from "./Components/CanvasRendering";
 import ThreeJsRendering from "./Components/ThreeJsRendering";
 
 import './App.css';
 
+interface stripeDataInterface {
+  base64Data: string;
+  index: number;
+}
 
 function App() {
   const [nbStripes, setNbStripes] = useState<number>(12);
-  const [stripes, setStripes] = useState<string[]>([]);
+  const [stripes, setStripes] = useState<stripeDataInterface[]>([]);
   const [width, setWidth] = useState<number>(500);
   const [height, setHeight] = useState<number>(500);
+  const [padding, setPadding] = useState<number>(4);
   const [grayScale, setGrayScale] = useState<boolean>(false);
   const [threeJsMode, setThreeJsMode] = useState<boolean>(false);
+  const base64Stripes = useMemo(() => stripes.map(stripe => stripe.base64Data), [stripes]);
 
   function onChangeStripe(base64Stripes: string[]) {
-    setStripes(base64Stripes);
+    const stripesData = base64Stripes.map(((base64Data, index) => {
+      return { base64Data, index }
+    }));
+    setStripes(stripesData);
+  }
+
+  function sortStripes() {
+    const stripeData = sortBy(stripes, 'index');
+    setStripes(stripeData);
   }
 
   return (
-    <div className="App">
+    <div className="flex flex-col gap-7 bg-base-200">
       <Header />
-      <input 
-        type="range"
-        min="1"
-        max="20"
-        value={nbStripes}
-        onChange={(e) => setNbStripes(parseInt(e.target.value))}
-        className="range range-primary"
-      />
-      <input 
-        type="range"
-        min="100"
-        max="1920"
-        value={width}
-        onChange={(e) => setWidth(parseInt(e.target.value))}
-        className="range range-primary"
-      />
-      <input 
-        type="range"
-        min="100"
-        max="1080"
-        value={height}
-        onChange={(e) => setHeight(parseInt(e.target.value))}
-        className="range range-primary"
-      />
-      <button className="btn btn-primary" onClick={() => setStripes(shuffle(stripes))}>Shuffle</button>
-      <div className="form-control">
-        <label className="label cursor-pointer">
-          <span className="label-text">3D</span>
-          <input
-            type="checkbox"
-            className="toggle toggle-primary"
-            onChange={() => setThreeJsMode(!threeJsMode)}
-            checked={threeJsMode}
+      <div className="flex md:flex-row flex-col gap-5">
+        <Card title="Settings">
+          <FromImageToStripes
+            graScale={grayScale}
+            nbStripes={nbStripes}
+            onChangeStripe={onChangeStripe}
           />
-        </label>
-      </div>
-      <div className="form-control">
-        <label className="label cursor-pointer">
-          <span className="label-text">GrayScale</span>
-          <input
-            type="checkbox"
-            className="toggle toggle-primary"
-            onChange={() => setGrayScale(!grayScale)}
-            checked={grayScale}
-          />
-        </label>
-      </div>
-      <FromImageToStripes
-        graScale={grayScale}
-        nbStripes={nbStripes}
-        onChangeStripe={onChangeStripe}
-      />
-      {
-        threeJsMode ?
-        <ThreeJsRendering
-          width={width}
-          height={height}
-          stripes={stripes}
-        /> :
-        <CanvasRendering
-          width={width}
-          height={height}
-          stripes={stripes}
-        />
-      }
+             <Slider
+              min={1}
+              max={20}
+              value={nbStripes}
+              onChange={(newValue) => setNbStripes(newValue)}
+              label="Number of stripes"
+            />
+            <Slider
+              min={100}
+              max={1920}
+              value={width}
+              onChange={(newValue) => setWidth(newValue)}
+              label="Width"
+            />
+            <Slider
+              min={100}
+              max={1080}
+              value={height}
+              onChange={(newValue) => setHeight(newValue)}
+              label="Height"
+            />
+            <Slider
+              min={0}
+              max={100}
+              value={padding}
+              onChange={(newValue) => setPadding(newValue)}
+              label="Spacing"
+            />
+            <div className="form-control">
+              <label className="label cursor-pointer">
+                <span className="label-text">3D</span>
+                <input
+                  type="checkbox"
+                  className="toggle toggle-primary"
+                  onChange={() => setThreeJsMode(!threeJsMode)}
+                  checked={threeJsMode}
+                />
+              </label>
+            </div>
+            <div className="form-control">
+              <label className="label cursor-pointer">
+                <span className="label-text">GrayScale</span>
+                <input
+                  type="checkbox"
+                  className="toggle toggle-primary"
+                  onChange={() => setGrayScale(!grayScale)}
+                  checked={grayScale}
+                />
+              </label>
+            </div>
+            <button className="btn btn-primary" onClick={() => setStripes(shuffle(stripes))}>Shuffle</button>
+            <button className="btn btn-secondary" onClick={() => sortStripes()}>Sort</button>
+         </Card>
+         <Card title="Result">
+          {
+            threeJsMode ?
+            <ThreeJsRendering
+              padding={padding}
+              width={width}
+              height={height}
+              stripes={base64Stripes}
+            /> :
+            <CanvasRendering
+              padding={padding}
+              width={width}
+              height={height}
+              stripes={base64Stripes}
+            />
+          }
+          </Card>
+       </div>
       <Footer />
     </div>
   );
