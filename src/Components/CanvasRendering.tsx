@@ -5,10 +5,19 @@ interface CanvasRenderingProps {
   padding: number;
   width: number;
   height: number;
+  backgroundColor: string;
 }
 
-function CanvasRendering({ stripes, padding, width, height } : CanvasRenderingProps) {
+function CanvasRendering({ stripes, padding, width, height, backgroundColor } : CanvasRenderingProps) {
   const refCanvas = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if(!refCanvas || !refCanvas.current) {
+      console.error("Cannot find the canvas in CanvasRendering");
+      return;
+    }
+    refCanvas.current.style.background = backgroundColor;
+  }, [backgroundColor])
 
   useEffect(() => {
     if(!refCanvas || !refCanvas.current) {

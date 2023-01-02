@@ -22,7 +22,7 @@ function Slider({
   step = 1
 } : SliderProps ) {
   return (
-    <div className="flex flex-col disabled">
+    <div className="flex flex-col">
       <label className="flex flex-row items-center gap-2">
         {label}
         <div className="badge badge-accent">{value}</div>

@@ -25,6 +25,7 @@ function App() {
   const [depth, setDepth] = useState<number>(0.2);
   const [grayScale, setGrayScale] = useState<boolean>(false);
   const [threeJsMode, setThreeJsMode] = useState<boolean>(false);
+  const [backgroundColor, setBackgroundColor] = useState<string>("#c5c4c4");
   const base64Stripes = useMemo(() => stripes.map(stripe => stripe.base64Data), [stripes]);
 
   function onChangeStripe(base64Stripes: string[]) {
@@ -42,7 +43,7 @@ function App() {
   return (
     <div className="flex flex-col gap-7 bg-base-200">
       <Header />
-      <div className="p-5 flex md:flex-row flex-col gap-5">
+      <div className="p-5 flex md:flex-row flex-col flex-grow gap-5">
         <Card title="Settings">
           <FromImageToStripes
             graScale={grayScale}
@@ -87,6 +88,13 @@ function App() {
               float={true}
               disabled={!threeJsMode}
             />
+            <div className="flex flex-col">
+              <label className="flex flex-row items-center gap-2">
+                Background Color
+                <div className="badge badge-accent">{backgroundColor.toString()}</div>
+              </label>
+              <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} />
+            </div>
             <div className="form-control">
               <label className="label cursor-pointer">
                 <span className="label-text">3D</span>
@@ -121,6 +129,7 @@ function App() {
                 width={width}
                 height={height}
                 stripes={base64Stripes}
+                backgroundColor={backgroundColor}
                 depth={depth}
               /> :
               <CanvasRendering
@@ -128,6 +137,7 @@ function App() {
                 width={width}
                 height={height}
                 stripes={base64Stripes}
+                backgroundColor={backgroundColor}
               />
             }
             </Card>

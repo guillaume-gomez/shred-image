@@ -12,9 +12,10 @@ interface ThreejsRenderingProps {
   width: number;
   height: number;
   depth: number;
+  backgroundColor: string;
 }
 
-function ThreejsRendering({ stripes, padding, width, height, depth } : ThreejsRenderingProps) {
+function ThreejsRendering({ stripes, padding, width, height, depth, backgroundColor } : ThreejsRenderingProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { toggleFullscreen } = useFullscreen({ target: canvasRef });
   const totalPadding = useMemo(() => stripes.length * padding, [stripes, padding]);
@@ -41,7 +42,7 @@ function ThreejsRendering({ stripes, padding, width, height, depth } : ThreejsRe
       ref={canvasRef}
       style={{width, height}}
     >
-      <color attach="background" args={['#DD6E70']} />
+      <color attach="background" args={[backgroundColor]} />
       <OrbitControls makeDefault />
       {/*<ambientLight />*/}
       <pointLight position={[10, 10, 10]} />
