@@ -7,12 +7,12 @@ import { Canvas, useFrame, ThreeElements, useLoader, useThree } from '@react-thr
 interface ThreeJsStripeProps {
   base64Texture: string;
   meshProps: ThreeElements['mesh'];
-  widthStripe: number;
-  heightStripe: number;
+  stripeWidth: number;
+  stripeHeight: number;
 }
 
 
-function ThreeJsStripe({meshProps, base64Texture, widthStripe, heightStripe}: ThreeJsStripeProps) {
+function ThreeJsStripe({meshProps, base64Texture, stripeWidth, stripeHeight}: ThreeJsStripeProps) {
   const { size: { width, height } } = useThree();
   const [{ position }, api] = useSpring<any>(() =>({
     from: meshProps.position,
@@ -40,8 +40,8 @@ function ThreeJsStripe({meshProps, base64Texture, widthStripe, heightStripe}: Th
       ref={mesh}
       /*{...meshProps}*/
     >
-      <boxGeometry args={[widthStripe, heightStripe, 0.1]} />
-      <meshStandardMaterial map={texture} /*color={hovered ? 'hotpink' : 'orange'}*/ />
+      <boxGeometry args={[stripeWidth, stripeHeight, 0.1]} />
+      <meshStandardMaterial map={texture} />
     </animated.mesh>
   )
 }

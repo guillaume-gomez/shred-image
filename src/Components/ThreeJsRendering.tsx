@@ -20,9 +20,10 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
   const { toggleFullscreen } = useFullscreen({ target: canvasRef });
   const totalPadding = useMemo(() => stripes.length * padding, [stripes, padding]);
   const normelizedPadding =useMemo(() => padding/width, [padding, width]);
-  const widthStripe = useMemo(() => ((width - totalPadding)/stripes.length)/width, [width, stripes]);
-  const widthStripes = useMemo(() => stripes.length *(widthStripe + normelizedPadding), [stripes, widthStripe, normelizedPadding]);
+  const stripeWidth = useMemo(() => ((width - totalPadding)/stripes.length)/width, [width, stripes]);
+  const shapeWidth = useMemo(() => stripes.length *(stripeWidth + normelizedPadding), [stripes, stripeWidth, normelizedPadding]);
   
+  console.log(shapeWidth)
   if(stripes.length === 0) {
     return <p>Nothing to render</p>
   }
@@ -32,37 +33,37 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
     return (Math.random() * (( max - min ) + min)) * sign;
   }
 
-  console.log(randomRange(-depth, depth));
-
   return (
-    <Canvas
-      camera={{ position: [0, 0.0, 1], fov: 75, far: 5 }}
-      dpr={window.devicePixelRatio}
-      onDoubleClick={toggleFullscreen}
-      ref={canvasRef}
-      style={{width, height}}
-    >
-      <color attach="background" args={[backgroundColor]} />
-      <OrbitControls makeDefault />
-      {/*<ambientLight />*/}
-      <pointLight position={[10, 10, 10]} />
-      <group
-        position={[-0.5
-          , 0, 0]}
+    <div className="flex flex-col gap-5 w-full">
+      <Canvas
+        camera={{ position: [0, 0.0, 1], fov: 75, far: 5 }}
+        dpr={window.devicePixelRatio}
+        onDoubleClick={toggleFullscreen}
+        ref={canvasRef}
+        style={{width, height}}
       >
-        {
-          stripes.map((stripe, index) => {
-            return <ThreeJsStripe
-                      key={index}
-                      widthStripe={widthStripe}
-                      heightStripe={height/height}
-                      base64Texture={stripe}
-                      meshProps={{position:[(index * (widthStripe + normelizedPadding)), 0, randomRange(0, depth)]}}
-                   />
-          })
-        }
-      </group>
-    </Canvas>
+        <color attach="background" args={[backgroundColor]} />
+        <OrbitControls makeDefault />
+        <pointLight position={[10, 10, 10]} />
+        <group
+          position={[-shapeWidth/2
+            , 0, 0]}
+        >
+          {
+            stripes.map((stripe, index) => {
+              return <ThreeJsStripe
+                        key={index}
+                        stripeWidth={stripeWidth}
+                        stripeHeight={height/height}
+                        base64Texture={stripe}
+                        meshProps={{position:[(index * (stripeWidth + normelizedPadding)), 0, randomRange(0, depth)]}}
+                     />
+            })
+          }
+        </group>
+      </Canvas>
+      <p className="text-xs">Double click to switch to fullscreen</p>
+    </div>
   );
 }
 
