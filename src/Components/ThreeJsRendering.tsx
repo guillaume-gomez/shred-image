@@ -1,6 +1,5 @@
-import React, { useRef, useState, useMemo } from 'react';
-import * as THREE from 'three';
-import { Canvas, useFrame, ThreeElements } from '@react-three/fiber';
+import React, { useRef , useMemo } from 'react';
+import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { useFullscreen } from "rooks";
 import ThreeJsStripe from "./ThreeJsStripe";
@@ -21,7 +20,7 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
   const { toggleFullscreen } = useFullscreen({ target: canvasRef });
   const totalPadding = useMemo(() => stripes.length * padding, [stripes, padding]);
   const normelizedPadding =useMemo(() => padding/width, [padding, width]);
-  const stripeWidth = useMemo(() => ((width - totalPadding)/stripes.length)/width, [width, stripes]);
+  const stripeWidth = useMemo(() => ((width - totalPadding)/stripes.length)/width, [width, stripes, totalPadding]);
   const shapeWidth = useMemo(() => stripes.length *(stripeWidth + normelizedPadding), [stripes, stripeWidth, normelizedPadding]);
   
   if(stripes.length === 0) {

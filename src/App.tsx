@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { shuffle, sortBy } from "lodash";
 import { useOnWindowResize } from "rooks";
 

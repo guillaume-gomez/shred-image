@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { stripeDataInterface } from "../interfaces";
 
 interface CanvasRenderingProps {
@@ -11,6 +11,29 @@ interface CanvasRenderingProps {
 
 function CanvasRendering({ stripes, padding, width, height, backgroundColor } : CanvasRenderingProps) {
   const refCanvas = useRef<HTMLCanvasElement>(null);
+  const render = useCallback((context : CanvasRenderingContext2D, stripes: stripeDataInterface[]) => {
+    const totalPadding = stripes.length * padding;
+    const stripeWidth = (width - totalPadding) / stripes.length;
+    context.clearRect(0,0, width, height);
+
+    stripes.forEach((stripe, index) => {
+      let image = new Image();
+      image.src = stripe.base64Data;
+      image.onload = () => {
+        context.drawImage(
+          image,
+          0,
+          0,
+          image.width,
+          image.height,
+          index * (stripeWidth + padding),
+          0,
+          stripeWidth,
+          height
+        );
+      }
+    });
+  }, [height, width, padding]);
 
   useEffect(() => {
     if(!refCanvas || !refCanvas.current) {
@@ -42,7 +65,7 @@ function CanvasRendering({ stripes, padding, width, height, backgroundColor } : 
       return;
     }
     render(context, stripes);
-  }, [stripes, width, height]);
+  }, [stripes, width, height, render]);
 
   useEffect(() => {
     if(!refCanvas || !refCanvas.current) {
@@ -56,33 +79,7 @@ function CanvasRendering({ stripes, padding, width, height, backgroundColor } : 
       return;
     }
     render(context, stripes);
-  }, [padding])
-
-
-  function render(context : CanvasRenderingContext2D, stripes: stripeDataInterface[]): void {
-    const totalPadding = stripes.length * padding;
-    const stripeWidth = (width - totalPadding) / stripes.length;
-    context.clearRect(0,0, width, height);
-
-    stripes.map((stripe, index) => {
-      let image = new Image();
-      image.src = stripe.base64Data;
-      image.onload = () => {
-        context.drawImage(
-          image,
-          0,
-          0,
-          image.width,
-          image.height,
-          index * (stripeWidth + padding),
-          0,
-          stripeWidth,
-          height
-        );
-      }
-    });
-  }
-
+  }, [padding, stripes, render])
 
   return (
     <canvas
