@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
+import { stripeDataInterface } from "../interfaces";
 
 interface CanvasRenderingProps {
-  stripes: string[];
+  stripes: stripeDataInterface[];
   padding: number;
   width: number;
   height: number;
@@ -58,14 +59,14 @@ function CanvasRendering({ stripes, padding, width, height, backgroundColor } : 
   }, [padding])
 
 
-  function render(context : CanvasRenderingContext2D, stripes: string[]): void {
+  function render(context : CanvasRenderingContext2D, stripes: stripeDataInterface[]): void {
     const totalPadding = stripes.length * padding;
     const stripeWidth = (width - totalPadding) / stripes.length;
     context.clearRect(0,0, width, height);
 
     stripes.map((stripe, index) => {
       let image = new Image();
-      image.src = stripe;
+      image.src = stripe.base64Data;
       image.onload = () => {
         context.drawImage(
           image,

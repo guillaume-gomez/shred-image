@@ -4,10 +4,11 @@ import { Canvas, useFrame, ThreeElements } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { useFullscreen } from "rooks";
 import ThreeJsStripe from "./ThreeJsStripe";
+import { stripeDataInterface } from "../interfaces";
 
 
 interface ThreejsRenderingProps {
-  stripes: string[];
+  stripes: stripeDataInterface[];
   padding:number;
   width: number;
   height: number;
@@ -23,7 +24,6 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
   const stripeWidth = useMemo(() => ((width - totalPadding)/stripes.length)/width, [width, stripes]);
   const shapeWidth = useMemo(() => stripes.length *(stripeWidth + normelizedPadding), [stripes, stripeWidth, normelizedPadding]);
   
-  console.log(shapeWidth)
   if(stripes.length === 0) {
     return <p>Nothing to render</p>
   }
@@ -52,10 +52,10 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
           {
             stripes.map((stripe, index) => {
               return <ThreeJsStripe
-                        key={index}
+                        key={stripe.index}
                         stripeWidth={stripeWidth}
                         stripeHeight={height/height}
-                        base64Texture={stripe}
+                        base64Texture={stripe.base64Data}
                         meshProps={{position:[(index * (stripeWidth + normelizedPadding)), 0, randomRange(0, depth)]}}
                      />
             })
