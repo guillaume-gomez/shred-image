@@ -1,20 +1,19 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { shuffle, sortBy } from "lodash";
+import { useOnWindowResize } from "rooks";
 
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
 import Slider from "./Components/Slider";
 import Card from "./Components/Card";
+import ColorInput from "./Components/ColorInput";
 import FromImageToStripes from "./Components/FromImageToStripes";
 import CanvasRendering from "./Components/CanvasRendering";
 import ThreeJsRendering from "./Components/ThreeJsRendering";
+import { stripeDataInterface } from "./interfaces";
 
 import './App.css';
 
-interface stripeDataInterface {
-  base64Data: string;
-  index: number;
-}
 
 function App() {
   const [nbStripes, setNbStripes] = useState<number>(12);
@@ -26,13 +25,34 @@ function App() {
   const [grayScale, setGrayScale] = useState<boolean>(false);
   const [threeJsMode, setThreeJsMode] = useState<boolean>(false);
   const [backgroundColor, setBackgroundColor] = useState<string>("#c5c4c4");
-  const base64Stripes = useMemo(() => stripes.map(stripe => stripe.base64Data), [stripes]);
+
+  const resultDivRef = useRef<HTMLDivElement>(null);
+  const [maxWidth, setMaxWidth] = useState<number>(1920);
+  const [maxHeight, setMaxHeight] = useState<number>(1080);
+  
+  useOnWindowResize(() => {
+    limitSize();
+  });
+
+  useEffect(() => {
+    limitSize();
+  }, [resultDivRef])
 
   function onChangeStripe(base64Stripes: string[]) {
     const stripesData = base64Stripes.map(((base64Data, index) => {
       return { base64Data, index }
     }));
     setStripes(stripesData);
+  }
+
+  function limitSize() {
+    const newWidth = (resultDivRef.current as any).clientWidth;
+    const newHeight = (resultDivRef.current as any).clientHeight;
+
+    setMaxWidth(newWidth);
+    //setMaxHeight(newHeight);
+
+
   }
 
   function sortStripes() {
@@ -59,14 +79,14 @@ function App() {
             />
             <Slider
               min={100}
-              max={1920}
+              max={maxWidth}
               value={width}
               onChange={(newValue) => setWidth(newValue)}
               label="Width"
             />
             <Slider
               min={100}
-              max={1080}
+              max={maxHeight}
               value={height}
               onChange={(newValue) => setHeight(newValue)}
               label="Height"
@@ -88,13 +108,11 @@ function App() {
               float={true}
               disabled={!threeJsMode}
             />
-            <div className="flex flex-col">
-              <label className="flex flex-row items-center gap-2">
-                Background Color
-                <div className="badge badge-accent">{backgroundColor.toString()}</div>
-              </label>
-              <input type="color" value={backgroundColor} onChange={(e) => setBackgroundColor(e.target.value)} />
-            </div>
+            <ColorInput
+              label="Background Color"
+              value={backgroundColor}
+              onChange={(newColor) => setBackgroundColor(newColor)}
+            />
             <div className="form-control">
               <label className="label cursor-pointer">
                 <span className="label-text">3D</span>
@@ -120,7 +138,7 @@ function App() {
             <button className="btn btn-primary" onClick={() => setStripes(shuffle(stripes))}>Shuffle</button>
             <button className="btn btn-secondary" onClick={() => sortStripes()}>Sort</button>
          </Card>
-         <div className="flex-grow">
+         <div className="flex-grow" ref={resultDivRef}>
            <Card title="Result">
             {
               threeJsMode ?
@@ -128,7 +146,7 @@ function App() {
                 padding={padding}
                 width={width}
                 height={height}
-                stripes={base64Stripes}
+                stripes={stripes}
                 backgroundColor={backgroundColor}
                 depth={depth}
               /> :
@@ -136,7 +154,7 @@ function App() {
                 padding={padding}
                 width={width}
                 height={height}
-                stripes={base64Stripes}
+                stripes={stripes}
                 backgroundColor={backgroundColor}
               />
             }
