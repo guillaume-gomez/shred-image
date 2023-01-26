@@ -23,8 +23,9 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
   const stripeWidth = useMemo(() => ((width - totalPadding)/stripes.length)/width, [width, stripes, totalPadding]);
   const shapeWidth = useMemo(() => stripes.length *(stripeWidth + normelizedPadding), [stripes, stripeWidth, normelizedPadding]);
   
+  // before stripes are cut
   if(stripes.length === 0) {
-    return <p>Nothing to render</p>
+    return <canvas width={width} height={height} style={{ background: backgroundColor }}/>
   }
 
   function randomRange(min :number, max : number) {
