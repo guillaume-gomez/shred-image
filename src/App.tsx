@@ -14,7 +14,6 @@ import { stripeDataInterface } from "./interfaces";
 
 import './App.css';
 
-
 function App() {
   const [nbStripes, setNbStripes] = useState<number>(12);
   const [stripes, setStripes] = useState<stripeDataInterface[]>([]);
@@ -23,7 +22,7 @@ function App() {
   const [padding, setPadding] = useState<number>(4);
   const [depth, setDepth] = useState<number>(0.2);
   const [grayScale, setGrayScale] = useState<boolean>(false);
-  const [threeJsMode, setThreeJsMode] = useState<boolean>(false);
+  const [threeJsMode, setThreeJsMode] = useState<boolean>(true);
   const [backgroundColor, setBackgroundColor] = useState<string>("#c5c4c4");
 
   const resultDivRef = useRef<HTMLDivElement>(null);
@@ -50,8 +49,11 @@ function App() {
     const newHeight = (resultDivRef.current as any).clientHeight;
 
     setMaxWidth(newWidth);
-    //setMaxHeight(newHeight);
+    setMaxHeight(newHeight);
 
+    const newPredefinedWidth = newWidth - 50;
+    setWidth(newPredefinedWidth);
+    setHeight(newPredefinedWidth * 9/16);
 
   }
 
@@ -64,80 +66,82 @@ function App() {
     <div className="flex flex-col gap-7 bg-base-200">
       <Header />
       <div className="p-5 flex md:flex-row flex-col flex-grow gap-5">
-        <Card title="Settings">
-          <FromImageToStripes
-            graScale={grayScale}
-            nbStripes={nbStripes}
-            onChangeStripe={onChangeStripe}
-          />
-             <Slider
-              min={1}
-              max={20}
-              value={nbStripes}
-              onChange={(newValue) => setNbStripes(newValue)}
-              label="Number of stripes"
+        <div style={{minWidth:350}}>
+          <Card title="Settings">
+            <FromImageToStripes
+              graScale={grayScale}
+              nbStripes={nbStripes}
+              onChangeStripe={onChangeStripe}
             />
-            <Slider
-              min={100}
-              max={maxWidth}
-              value={width}
-              onChange={(newValue) => setWidth(newValue)}
-              label="Width"
-            />
-            <Slider
-              min={100}
-              max={maxHeight}
-              value={height}
-              onChange={(newValue) => setHeight(newValue)}
-              label="Height"
-            />
-            <Slider
-              min={0}
-              max={100}
-              value={padding}
-              onChange={(newValue) => setPadding(newValue)}
-              label="Spacing"
-            />
-            <Slider
-              min={0}
-              max={1}
-              step={0.001}
-              value={depth}
-              onChange={(newValue) => setDepth(newValue)}
-              label="Depth (3d only)"
-              float={true}
-              disabled={!threeJsMode}
-            />
-            <ColorInput
-              label="Background Color"
-              value={backgroundColor}
-              onChange={(newColor) => setBackgroundColor(newColor)}
-            />
-            <div className="form-control">
-              <label className="label cursor-pointer">
-                <span className="label-text">3D</span>
-                <input
-                  type="checkbox"
-                  className="toggle toggle-primary"
-                  onChange={() => setThreeJsMode(!threeJsMode)}
-                  checked={threeJsMode}
-                />
-              </label>
-            </div>
-            <div className="form-control">
-              <label className="label cursor-pointer">
-                <span className="label-text">GrayScale</span>
-                <input
-                  type="checkbox"
-                  className="toggle toggle-primary"
-                  onChange={() => setGrayScale(!grayScale)}
-                  checked={grayScale}
-                />
-              </label>
-            </div>
-            <button className="btn btn-primary" onClick={() => setStripes(shuffle(stripes))}>Shuffle</button>
-            <button className="btn btn-secondary" onClick={() => sortStripes()}>Sort</button>
-         </Card>
+               <Slider
+                min={1}
+                max={20}
+                value={nbStripes}
+                onChange={(newValue) => setNbStripes(newValue)}
+                label="Number of stripes"
+              />
+              <Slider
+                min={100}
+                max={maxWidth}
+                value={width}
+                onChange={(newValue) => setWidth(newValue)}
+                label="Width"
+              />
+              <Slider
+                min={100}
+                max={maxHeight}
+                value={height}
+                onChange={(newValue) => setHeight(newValue)}
+                label="Height"
+              />
+              <Slider
+                min={0}
+                max={100}
+                value={padding}
+                onChange={(newValue) => setPadding(newValue)}
+                label="Spacing"
+              />
+              <Slider
+                min={0}
+                max={1}
+                step={0.001}
+                value={depth}
+                onChange={(newValue) => setDepth(newValue)}
+                label="Depth (3d only)"
+                float={true}
+                disabled={!threeJsMode}
+              />
+              <ColorInput
+                label="Background Color"
+                value={backgroundColor}
+                onChange={(newColor) => setBackgroundColor(newColor)}
+              />
+              <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text">3D</span>
+                  <input
+                    type="checkbox"
+                    className="toggle toggle-primary"
+                    onChange={() => setThreeJsMode(!threeJsMode)}
+                    checked={threeJsMode}
+                  />
+                </label>
+              </div>
+              <div className="form-control">
+                <label className="label cursor-pointer">
+                  <span className="label-text">GrayScale</span>
+                  <input
+                    type="checkbox"
+                    className="toggle toggle-primary"
+                    onChange={() => setGrayScale(!grayScale)}
+                    checked={grayScale}
+                  />
+                </label>
+              </div>
+              <button className="btn btn-primary" onClick={() => setStripes(shuffle(stripes))}>Shuffle</button>
+              <button className="btn btn-secondary" onClick={() => sortStripes()}>Sort</button>
+           </Card>
+         </div>
          <div className="flex-grow" ref={resultDivRef}>
            <Card title="Result">
             {
