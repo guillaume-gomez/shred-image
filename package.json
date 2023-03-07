@@ -1,6 +1,7 @@
 {
   "name": "shred-image",
   "version": "0.1.0",
+  "homepage": "https://guillaume-gomez.github.io/shred-image",
   "private": true,
   "dependencies": {
     "@react-spring/three": "^9.6.1",
@@ -17,6 +18,7 @@
     "@types/three": "^0.146.0",
     "autoprefixer": "^10.4.13",
     "daisyui": "^2.46.0",
+    "gh-pages": "^5.0.0",
     "lodash": "^4.17.21",
     "postcss": "^8.4.20",
     "react": "^18.2.0",
@@ -29,6 +31,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "yarn run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
