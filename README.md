@@ -4,10 +4,8 @@ An app to generate kind of cinetic artwork
 
 # Examples
 
-
-
-![preview](her.png)
-![preview2](lalaland.png)
-![preview3](munch.png)
-![preview4](rodin.png)
-![preview5](rodin2.png)
+![preview](previews/her.png)
+![preview2](previews/lalaland.png)
+![preview3](previews/munch.png)
+![preview4](previews/rodin.png)
+![preview5](previews/rodin2.png)
