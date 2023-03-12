@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import { TextureLoader } from 'three/src/loaders/TextureLoader';
 import { useSpring, animated } from '@react-spring/three';
-import React, { useRef, useState, useEffect } from 'react';
-import { Canvas, useFrame, ThreeElements, useLoader, useThree } from '@react-three/fiber';
+import React, { useRef, useEffect } from 'react';
+import { ThreeElements, useLoader } from '@react-three/fiber';
 
 interface ThreeJsStripeProps {
   base64Texture: string;
@@ -13,7 +13,6 @@ interface ThreeJsStripeProps {
 
 
 function ThreeJsStripe({meshProps, base64Texture, stripeWidth, stripeHeight}: ThreeJsStripeProps) {
-  const { size: { width, height } } = useThree();
   const [{ position }, api] = useSpring<any>(() =>({
     from: meshProps.position,
     position: meshProps.position,

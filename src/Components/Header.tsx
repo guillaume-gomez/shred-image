@@ -4,7 +4,7 @@ function Header() {
    return (
      <div className="navbar mb-2 bg-neutral-focus text-neutral-content p-6">
       <div className="navbar-start flex flex-row items-center gap-2">
-        <img className="rounded-lg" src={process.env.PUBLIC_URL + "logo512.png"} width="64px" />
+        <img className="rounded-lg" src={process.env.PUBLIC_URL + "/logo512.png"} width="64px" alt="logo image"/>
         <span className="text-2xl font-bold">
           Image Shreder
         </span>

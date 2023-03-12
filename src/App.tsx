@@ -33,10 +33,6 @@ function App() {
     limitSize();
   });
 
-  useEffect(() => {
-    limitSize();
-  }, [resultDivRef])
-
   function onChangeStripe(base64Stripes: string[]) {
     const stripesData = base64Stripes.map(((base64Data, index) => {
       return { base64Data, index }
@@ -65,8 +61,8 @@ function App() {
   return (
     <div className="flex flex-col gap-7 bg-base-200">
       <Header />
-      <div className="p-5 flex md:flex-row flex-col flex-grow gap-5">
-        <div style={{minWidth:350}}>
+      <div className="flex md:flex-row flex-col gap-5 p-3">
+        <div className="lg:basis-1/4 md:basis-5/12 basis-auto">
           <Card title="Settings">
             <FromImageToStripes
               graScale={grayScale}
@@ -142,7 +138,7 @@ function App() {
               <button className="btn btn-secondary" onClick={() => sortStripes()}>Sort</button>
            </Card>
          </div>
-         <div className="flex-grow" ref={resultDivRef}>
+         <div className="lg:basis-3/4 md:basis-7/12 basis-auto" ref={resultDivRef}>
            <Card title="Result">
             {
               threeJsMode ?
@@ -163,7 +159,7 @@ function App() {
               />
             }
             </Card>
-           </div>
+          </div>
        </div>
       <Footer />
     </div>
