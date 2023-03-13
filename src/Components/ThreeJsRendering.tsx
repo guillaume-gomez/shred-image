@@ -62,7 +62,10 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
           }
         </group>
       </Canvas>
-      <p className="text-xs">Double click to switch to fullscreen</p>
+      <ul className="text-xs">
+        <li>Double click to switch to fullscreen</li>
+        <li>Use your mouse or finger to move the camera</li>
+      </ul>
     </div>
   );
 }
