@@ -5,6 +5,7 @@ import { useFullscreen } from "rooks";
 import ThreeJsStripe from "./ThreeJsStripe";
 import { stripeDataInterface } from "../interfaces";
 import PanCursor from "../panCursor.png";
+import Help3D from "./Help3D";
 
 
 interface ThreejsRenderingProps {
@@ -26,7 +27,12 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
   
   // before stripes are cut
   if(stripes.length === 0) {
-    return <canvas width={width} height={height} style={{ background: backgroundColor }}/>
+    return (
+      <div className="flex flex-col gap-5">
+        <p>Upload an image to see the final result</p>
+        <canvas style={{ background: backgroundColor, width, height }}/>
+      </div>
+    );
   }
 
   function randomRange(min :number, max : number) {
@@ -64,6 +70,7 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
         </group>
       </Canvas>
       <img className="absolute opacity-75" src={PanCursor} width="44px" />
+      <Help3D />
       <ul className="text-xs">
         <li>Double click to switch to fullscreen</li>
         <li>Use your mouse or finger to move the camera</li>
