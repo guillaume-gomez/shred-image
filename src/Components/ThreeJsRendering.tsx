@@ -4,6 +4,7 @@ import { OrbitControls } from '@react-three/drei';
 import { useFullscreen } from "rooks";
 import ThreeJsStripe from "./ThreeJsStripe";
 import { stripeDataInterface } from "../interfaces";
+import PanCursor from "../panCursor.png";
 
 
 interface ThreejsRenderingProps {
@@ -62,6 +63,7 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
           }
         </group>
       </Canvas>
+      <img className="absolute opacity-75" src={PanCursor} width="44px" />
       <ul className="text-xs">
         <li>Double click to switch to fullscreen</li>
         <li>Use your mouse or finger to move the camera</li>
