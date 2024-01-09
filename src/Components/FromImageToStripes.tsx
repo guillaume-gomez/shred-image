@@ -66,7 +66,7 @@ function FromImageToStripes( { nbStripes, onChangeStripe, graScale } : FromImage
       }
       stripes.push(refCanvas.current.toDataURL());
     }
-    onChangeStripe(stripes, {width:refCanvas.current.width, height: refCanvas.current.height});
+    onChangeStripe(stripes, {width:refImage.current.width, height: refImage.current.height});
   }
 
   function convertToGrayScale(context: CanvasRenderingContext2D, width: number, height: number) {

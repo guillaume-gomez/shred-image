@@ -33,6 +33,8 @@ function ThreeJsStripe({meshProps, base64Texture, stripeWidth, stripeHeight}: Th
     return <></>;
   }
 
+  console.log(stripeWidth, stripeHeight)
+
   return (
     <animated.mesh
       position={position as any}
