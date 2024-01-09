@@ -1,9 +1,10 @@
 import React, { useRef, useEffect } from 'react';
+import { ImageSize } from "../interfaces";
 
 interface FromImageToStripesProps {
   nbStripes: number;
   graScale: boolean;
-  onChangeStripe: (base64Stripes : string[]) => void;
+  onChangeStripe: (base64Stripes : string[], imageSize: ImageSize) => void;
 }
 
 function FromImageToStripes( { nbStripes, onChangeStripe, graScale } : FromImageToStripesProps ) {
@@ -65,7 +66,7 @@ function FromImageToStripes( { nbStripes, onChangeStripe, graScale } : FromImage
       }
       stripes.push(refCanvas.current.toDataURL());
     }
-    onChangeStripe(stripes);
+    onChangeStripe(stripes, {width:refCanvas.current.width, height: refCanvas.current.height});
   }
 
   function convertToGrayScale(context: CanvasRenderingContext2D, width: number, height: number) {

@@ -10,7 +10,7 @@ import ColorInput from "./Components/ColorInput";
 import FromImageToStripes from "./Components/FromImageToStripes";
 import CanvasRendering from "./Components/CanvasRendering";
 import ThreeJsRendering from "./Components/ThreeJsRendering";
-import { stripeDataInterface } from "./interfaces";
+import { stripeDataInterface, ImageSize } from "./interfaces";
 
 import './App.css';
 
@@ -24,6 +24,8 @@ function App() {
   const [grayScale, setGrayScale] = useState<boolean>(false);
   const [threeJsMode, setThreeJsMode] = useState<boolean>(true);
   const [backgroundColor, setBackgroundColor] = useState<string>("#c5c4c4");
+  const [imageSize, setImageSize] = useState<ImageSize>({width: 0, height: 0});
+
 
   const resultDivRef = useRef<HTMLDivElement>(null);
   const [maxWidth, setMaxWidth] = useState<number>(1920);
@@ -33,11 +35,12 @@ function App() {
     limitSize();
   });
 
-  function onChangeStripe(base64Stripes: string[]) {
+  function onChangeStripe(base64Stripes: string[], imageSize: ImageSize) {
     const stripesData = base64Stripes.map(((base64Data, index) => {
       return { base64Data, index }
     }));
     setStripes(stripesData);
+    setImageSize(imageSize);
   }
 
   function limitSize() {
@@ -149,6 +152,7 @@ function App() {
                 stripes={stripes}
                 backgroundColor={backgroundColor}
                 depth={depth}
+                imageSize={imageSize}
               /> :
               <CanvasRendering
                 padding={padding}
