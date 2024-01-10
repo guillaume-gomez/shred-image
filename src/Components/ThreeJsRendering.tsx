@@ -51,8 +51,13 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
         style={{width, height}}
       >
         <color attach="background" args={[backgroundColor]} />
-        <OrbitControls makeDefault />
-        <pointLight position={[10, 10, 10]} />
+        <OrbitControls makeDefault
+          minPolarAngle={0}
+          maxPolarAngle={Math.PI / 1.9}
+          minAzimuthAngle={-0.55}
+          maxAzimuthAngle={0.55}
+        />
+
         <Stage environment={null}>
         <group
           position={[-shapeWidth/2
