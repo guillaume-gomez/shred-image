@@ -20,6 +20,7 @@ function App() {
   const [width, setWidth] = useState<number>(500);
   const [height, setHeight] = useState<number>(500);
   const [padding, setPadding] = useState<number>(4);
+  const [maxPadding, setMaxPadding] = useState<number>(100);
   const [depth, setDepth] = useState<number>(0.2);
   const [grayScale, setGrayScale] = useState<boolean>(false);
   const [threeJsMode, setThreeJsMode] = useState<boolean>(true);
@@ -38,6 +39,10 @@ function App() {
   useOnWindowResize(() => {
     limitSize();
   });
+
+  useEffect(() => {
+    computeMaxPadding();
+  }, [imageSize])
 
   function onChangeStripe(base64Stripes: string[], imageSize: ImageSize) {
     const stripesData = base64Stripes.map(((base64Data, index) => {
@@ -63,6 +68,15 @@ function App() {
   function sortStripes() {
     const stripeData = sortBy(stripes, 'index');
     setStripes(stripeData);
+  }
+
+  function computeMaxPadding() {
+    const stripeWidth = imageSize.width / nbStripes;
+    const maxPadding = Math.max(Math.floor(stripeWidth - 10), 10);
+    setMaxPadding(maxPadding);
+    if(maxPadding < padding) {
+      setPadding(maxPadding);
+    }
   }
 
   return (
@@ -99,7 +113,7 @@ function App() {
               />
               <Slider
                 min={0}
-                max={100}
+                max={maxPadding}
                 value={padding}
                 onChange={(newValue) => setPadding(newValue)}
                 label="Spacing"
