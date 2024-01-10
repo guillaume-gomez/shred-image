@@ -75,6 +75,7 @@ function App() {
               graScale={grayScale}
               nbStripes={nbStripes}
               onChangeStripe={onChangeStripe}
+              onChangeBackground={(backgroundColor: string) => setBackgroundColor(backgroundColor)}
             />
                <Slider
                 min={1}

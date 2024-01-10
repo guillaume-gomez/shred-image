@@ -5,9 +5,10 @@ interface FromImageToStripesProps {
   nbStripes: number;
   graScale: boolean;
   onChangeStripe: (base64Stripes : string[], imageSize: ImageSize) => void;
+  onChangeBackground: (backgroundColor: string) => void;
 }
 
-function FromImageToStripes( { nbStripes, onChangeStripe, graScale } : FromImageToStripesProps ) {
+function FromImageToStripes( { nbStripes, onChangeStripe, onChangeBackground, graScale } : FromImageToStripesProps ) {
   const refCanvas = useRef<HTMLCanvasElement>(null);
   const refImage = useRef<HTMLImageElement>(null);
  
@@ -67,6 +68,29 @@ function FromImageToStripes( { nbStripes, onChangeStripe, graScale } : FromImage
       stripes.push(refCanvas.current.toDataURL());
     }
     onChangeStripe(stripes, {width:refImage.current.width, height: refImage.current.height});
+    onChangeBackground(averageColor(context, refCanvas.current.width, refCanvas.current.height));
+  }
+
+  function rgbToHex(r : number, g: number, b: number) : string {
+    return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1);
+  }
+
+  function averageColor(context: CanvasRenderingContext2D, width: number, height: number) {
+    const imageData = context.getImageData(0, 0, width, height);
+
+    let red = 0;
+    let green = 0;
+    let blue = 0;
+
+    const numberOfPixels = imageData.data.length/4;
+
+    for (let i = 0; i < imageData.data.length; i += 4) {
+     red += imageData.data[i];
+     green += imageData.data[i + 1];
+     blue += imageData.data[i + 2];
+
+    }
+    return rgbToHex(red / numberOfPixels, green / numberOfPixels, blue / numberOfPixels);
   }
 
   function convertToGrayScale(context: CanvasRenderingContext2D, width: number, height: number) {
