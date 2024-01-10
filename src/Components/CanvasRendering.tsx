@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback } from 'react';
-import { stripeDataInterface } from "../interfaces";
+import { stripeDataInterface, ImageSize } from "../interfaces";
 
 interface CanvasRenderingProps {
   stripes: stripeDataInterface[];
@@ -7,13 +7,14 @@ interface CanvasRenderingProps {
   width: number;
   height: number;
   backgroundColor: string;
+  imageSize: ImageSize;
 }
 
-function CanvasRendering({ stripes, padding, width, height, backgroundColor } : CanvasRenderingProps) {
+function CanvasRendering({ stripes, padding, width, height, backgroundColor, imageSize } : CanvasRenderingProps) {
   const refCanvas = useRef<HTMLCanvasElement>(null);
   const render = useCallback((context : CanvasRenderingContext2D, stripes: stripeDataInterface[]) => {
     const totalPadding = stripes.length * padding;
-    const stripeWidth = (width - totalPadding) / stripes.length;
+    const stripeWidth = ((imageSize.width - totalPadding) / stripes.length);
     context.clearRect(0,0, width, height);
 
     stripes.forEach((stripe, index) => {
@@ -33,7 +34,7 @@ function CanvasRendering({ stripes, padding, width, height, backgroundColor } : 
         );
       }
     });
-  }, [height, width, padding]);
+  }, [height, width, padding, imageSize]);
 
   useEffect(() => {
     if(!refCanvas || !refCanvas.current) {

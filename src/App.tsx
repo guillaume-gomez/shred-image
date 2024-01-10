@@ -30,6 +30,10 @@ function App() {
   const resultDivRef = useRef<HTMLDivElement>(null);
   const [maxWidth, setMaxWidth] = useState<number>(1920);
   const [maxHeight, setMaxHeight] = useState<number>(1080);
+
+  useEffect(() => {
+    limitSize()
+  }, [])
   
   useOnWindowResize(() => {
     limitSize();
@@ -64,7 +68,7 @@ function App() {
   return (
     <div className="flex flex-col gap-7 bg-base-200">
       <Header />
-      <div className="flex md:flex-row flex-col gap-5 p-3">
+      <div className="flex md:flex-row flex-col gap-5 p-3 flex-grow">
         <div className="lg:basis-1/4 md:basis-5/12 basis-auto">
           <Card title="Settings">
             <FromImageToStripes
@@ -141,7 +145,7 @@ function App() {
               <button className="btn btn-secondary" onClick={() => sortStripes()}>Sort</button>
            </Card>
          </div>
-         <div className="lg:basis-3/4 md:basis-7/12 basis-auto" ref={resultDivRef}>
+         <div className="lg:basis-3/4 md:basis-7/12 basis-auto " ref={resultDivRef}>
            <Card title="Result">
             {
               threeJsMode ?
@@ -160,6 +164,7 @@ function App() {
                 height={height}
                 stripes={stripes}
                 backgroundColor={backgroundColor}
+                imageSize={imageSize}
               />
             }
             </Card>
