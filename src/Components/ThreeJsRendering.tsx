@@ -1,6 +1,6 @@
 import React, { useRef , useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, Stage } from '@react-three/drei';
 import { useFullscreen } from "rooks";
 import ThreeJsStripe from "./ThreeJsStripe";
 import { stripeDataInterface, ImageSize } from "../interfaces";
@@ -53,6 +53,7 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
         <color attach="background" args={[backgroundColor]} />
         <OrbitControls makeDefault />
         <pointLight position={[10, 10, 10]} />
+        <Stage environment={null}>
         <group
           position={[-shapeWidth/2
             , 0, 0]}
@@ -69,6 +70,7 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
             })
           }
         </group>
+        </Stage>
       </Canvas>
       <img className="absolute opacity-75" src={PanCursor} width="44px" />
       <Help3D />
