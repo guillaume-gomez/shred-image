@@ -54,8 +54,6 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
         <OrbitControls makeDefault
           minPolarAngle={0}
           maxPolarAngle={Math.PI / 1.9}
-          minAzimuthAngle={-0.55}
-          maxAzimuthAngle={0.55}
         />
 
         <Stage environment={null}>
