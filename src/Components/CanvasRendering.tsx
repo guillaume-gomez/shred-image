@@ -14,8 +14,8 @@ function CanvasRendering({ stripes, padding, width, height, backgroundColor, ima
   const refCanvas = useRef<HTMLCanvasElement>(null);
   const render = useCallback((context : CanvasRenderingContext2D, stripes: stripeDataInterface[]) => {
     const totalPadding = stripes.length * padding;
-    const stripeWidth = (imageSize.width - totalPadding) / stripes.length;
-    context.clearRect(0,0, imageSize.width, imageSize.width);
+    const stripeWidth = (width - totalPadding) / stripes.length;
+    context.clearRect(0,0, width, height);
 
     stripes.forEach((stripe, index) => {
       let image = new Image();
@@ -30,11 +30,11 @@ function CanvasRendering({ stripes, padding, width, height, backgroundColor, ima
           index * (stripeWidth + padding),
           0,
           stripeWidth,
-          imageSize.height
+          height
         );
       }
     });
-  }, [imageSize.height, imageSize.width, padding]);
+  }, [imageSize, width, height, padding]);
 
   useEffect(() => {
     if(!refCanvas || !refCanvas.current) {
@@ -49,10 +49,10 @@ function CanvasRendering({ stripes, padding, width, height, backgroundColor, ima
       console.error("Cannot find the canvas in CanvasRendering");
       return;
     }
-    refCanvas.current.width = imageSize.width;
-    refCanvas.current.height = imageSize.height;
+    refCanvas.current.width = width;
+    refCanvas.current.height = height;
 
-  }, [imageSize.width, imageSize.height]);
+  }, [width, height]);
 
   useEffect(() => {
     if(!refCanvas || !refCanvas.current) {
@@ -66,7 +66,7 @@ function CanvasRendering({ stripes, padding, width, height, backgroundColor, ima
       return;
     }
     render(context, stripes);
-  }, [stripes, imageSize.width, imageSize.height, render]);
+  }, [stripes, render]);
 
   useEffect(() => {
     if(!refCanvas || !refCanvas.current) {
