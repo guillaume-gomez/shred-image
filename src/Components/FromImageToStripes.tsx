@@ -1,9 +1,10 @@
 import React, { useRef, useEffect } from 'react';
+import { ImageSize } from "../interfaces";
 
 interface FromImageToStripesProps {
   nbStripes: number;
   graScale: boolean;
-  onChangeStripe: (base64Stripes : string[]) => void;
+  onChangeStripe: (base64Stripes : string[], imageSize: ImageSize) => void;
   onChangeBackground: (backgroundColor: string) => void;
 }
 
@@ -66,7 +67,7 @@ function FromImageToStripes( { nbStripes, onChangeStripe, onChangeBackground, gr
       }
       stripes.push(refCanvas.current.toDataURL());
     }
-    onChangeStripe(stripes);
+    onChangeStripe(stripes, {width:refImage.current.width, height: refImage.current.height});
     onChangeBackground(averageColor(context, refCanvas.current.width, refCanvas.current.height));
   }
 

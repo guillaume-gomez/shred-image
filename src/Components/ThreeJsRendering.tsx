@@ -1,9 +1,9 @@
 import React, { useRef , useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, Stage } from '@react-three/drei';
 import { useFullscreen } from "rooks";
 import ThreeJsStripe from "./ThreeJsStripe";
-import { stripeDataInterface } from "../interfaces";
+import { stripeDataInterface, ImageSize } from "../interfaces";
 import PanCursor from "../panCursor.png";
 import Help3D from "./Help3D";
 
@@ -15,16 +15,17 @@ interface ThreejsRenderingProps {
   height: number;
   depth: number;
   backgroundColor: string;
+  imageSize: ImageSize;
 }
 
-function ThreejsRendering({ stripes, padding, width, height, depth, backgroundColor } : ThreejsRenderingProps) {
+function ThreejsRendering({ stripes, padding, width, height, depth, backgroundColor, imageSize } : ThreejsRenderingProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { toggleFullscreen } = useFullscreen({ target: canvasRef });
   const totalPadding = useMemo(() => stripes.length * padding, [stripes, padding]);
-  const normelizedPadding =useMemo(() => padding/width, [padding, width]);
-  const stripeWidth = useMemo(() => ((width - totalPadding)/stripes.length)/width, [width, stripes, totalPadding]);
+  const normelizedPadding =useMemo(() => padding/imageSize.width, [padding, imageSize.width]);
+  const stripeWidth = useMemo(() => ((imageSize.width - totalPadding)/stripes.length)/imageSize.width, [imageSize.width, stripes, totalPadding]);
   const shapeWidth = useMemo(() => stripes.length *(stripeWidth + normelizedPadding), [stripes, stripeWidth, normelizedPadding]);
-  
+  console.log(imageSize)
   // before stripes are cut
   if(stripes.length === 0) {
     return (
@@ -52,6 +53,7 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
         <color attach="background" args={[backgroundColor]} />
         <OrbitControls makeDefault />
         <pointLight position={[10, 10, 10]} />
+        <Stage environment={null}>
         <group
           position={[-shapeWidth/2
             , 0, 0]}
@@ -61,13 +63,14 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
               return <ThreeJsStripe
                         key={stripe.index}
                         stripeWidth={stripeWidth}
-                        stripeHeight={height/height}
+                        stripeHeight={imageSize.height/imageSize.width}
                         base64Texture={stripe.base64Data}
                         meshProps={{position:[(index * (stripeWidth + normelizedPadding)), 0, randomRange(0, depth)]}}
                      />
             })
           }
         </group>
+        </Stage>
       </Canvas>
       <img className="absolute opacity-75" src={PanCursor} width="44px" />
       <Help3D />

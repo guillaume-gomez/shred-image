@@ -10,7 +10,7 @@ import ColorInput from "./Components/ColorInput";
 import FromImageToStripes from "./Components/FromImageToStripes";
 import CanvasRendering from "./Components/CanvasRendering";
 import ThreeJsRendering from "./Components/ThreeJsRendering";
-import { stripeDataInterface } from "./interfaces";
+import { stripeDataInterface, ImageSize } from "./interfaces";
 
 import './App.css';
 
@@ -24,20 +24,48 @@ function App() {
   const [grayScale, setGrayScale] = useState<boolean>(false);
   const [threeJsMode, setThreeJsMode] = useState<boolean>(true);
   const [backgroundColor, setBackgroundColor] = useState<string>("#c5c4c4");
+  const [imageSize, setImageSize] = useState<ImageSize>({width: 0, height: 0});
+
 
   const resultDivRef = useRef<HTMLDivElement>(null);
   const [maxWidth, setMaxWidth] = useState<number>(1920);
   const [maxHeight, setMaxHeight] = useState<number>(1080);
+
+  useEffect(() => {
+    limitSize()
+  }, [])
   
   useOnWindowResize(() => {
     limitSize();
   });
 
-  function onChangeStripe(base64Stripes: string[]) {
+  useEffect(() => {
+    // set the canvas size to image size
+    if(!threeJsMode) {
+      //resize to fit maxSize
+      if(imageSize.width > maxWidth) {
+        const ratio = maxWidth/imageSize.width;
+        setWidth(maxWidth);
+        setHeight(imageSize.height * ratio);
+
+      } else if(imageSize.height > maxHeight) {
+        const ratio = maxHeight/imageSize.height;
+        setHeight(maxHeight);
+        setWidth(imageSize.width * ratio);
+      }
+      else {
+        setWidth(imageSize.width);
+        setHeight(imageSize.height);
+      }
+    }
+  }, [threeJsMode, stripes, imageSize])
+
+  function onChangeStripe(base64Stripes: string[], imageSize: ImageSize) {
     const stripesData = base64Stripes.map(((base64Data, index) => {
       return { base64Data, index }
     }));
     setStripes(stripesData);
+    setImageSize(imageSize);
   }
 
   function limitSize() {
@@ -49,6 +77,7 @@ function App() {
 
     const newPredefinedWidth = newWidth - 50;
     setWidth(newPredefinedWidth);
+    // we assume the avaible size respect the ratio 16/9
     setHeight(newPredefinedWidth * 9/16);
 
   }
@@ -58,10 +87,11 @@ function App() {
     setStripes(stripeData);
   }
 
+
   return (
     <div className="flex flex-col gap-7 bg-base-200">
       <Header />
-      <div className="flex md:flex-row flex-col gap-5 p-3">
+      <div className="flex md:flex-row flex-col gap-5 p-3 flex-grow">
         <div className="lg:basis-1/4 md:basis-5/12 basis-auto">
           <Card title="Settings">
             <FromImageToStripes
@@ -76,20 +106,6 @@ function App() {
                 value={nbStripes}
                 onChange={(newValue) => setNbStripes(newValue)}
                 label="Number of stripes"
-              />
-              <Slider
-                min={100}
-                max={maxWidth}
-                value={width}
-                onChange={(newValue) => setWidth(newValue)}
-                label="Width"
-              />
-              <Slider
-                min={100}
-                max={maxHeight}
-                value={height}
-                onChange={(newValue) => setHeight(newValue)}
-                label="Height"
               />
               <Slider
                 min={0}
@@ -139,7 +155,7 @@ function App() {
               <button className="btn btn-secondary" onClick={() => sortStripes()}>Sort</button>
            </Card>
          </div>
-         <div className="lg:basis-3/4 md:basis-7/12 basis-auto" ref={resultDivRef}>
+         <div className="lg:basis-3/4 md:basis-7/12 basis-auto " ref={resultDivRef}>
            <Card title="Result">
             {
               threeJsMode ?
@@ -150,6 +166,7 @@ function App() {
                 stripes={stripes}
                 backgroundColor={backgroundColor}
                 depth={depth}
+                imageSize={imageSize}
               /> :
               <CanvasRendering
                 padding={padding}
@@ -157,6 +174,7 @@ function App() {
                 height={height}
                 stripes={stripes}
                 backgroundColor={backgroundColor}
+                imageSize={imageSize}
               />
             }
             </Card>

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback } from 'react';
-import { stripeDataInterface } from "../interfaces";
+import { stripeDataInterface, ImageSize } from "../interfaces";
 
 interface CanvasRenderingProps {
   stripes: stripeDataInterface[];
@@ -7,14 +7,15 @@ interface CanvasRenderingProps {
   width: number;
   height: number;
   backgroundColor: string;
+  imageSize: ImageSize;
 }
 
-function CanvasRendering({ stripes, padding, width, height, backgroundColor } : CanvasRenderingProps) {
+function CanvasRendering({ stripes, padding, width, height, backgroundColor, imageSize } : CanvasRenderingProps) {
   const refCanvas = useRef<HTMLCanvasElement>(null);
   const render = useCallback((context : CanvasRenderingContext2D, stripes: stripeDataInterface[]) => {
     const totalPadding = stripes.length * padding;
-    const stripeWidth = (width - totalPadding) / stripes.length;
-    context.clearRect(0,0, width, height);
+    const stripeWidth = (imageSize.width - totalPadding) / stripes.length;
+    context.clearRect(0,0, imageSize.width, imageSize.width);
 
     stripes.forEach((stripe, index) => {
       let image = new Image();
@@ -29,11 +30,11 @@ function CanvasRendering({ stripes, padding, width, height, backgroundColor } : 
           index * (stripeWidth + padding),
           0,
           stripeWidth,
-          height
+          imageSize.height
         );
       }
     });
-  }, [height, width, padding]);
+  }, [imageSize.height, imageSize.width, padding]);
 
   useEffect(() => {
     if(!refCanvas || !refCanvas.current) {
@@ -48,10 +49,10 @@ function CanvasRendering({ stripes, padding, width, height, backgroundColor } : 
       console.error("Cannot find the canvas in CanvasRendering");
       return;
     }
-    refCanvas.current.width = width;
-    refCanvas.current.height = height;
+    refCanvas.current.width = imageSize.width;
+    refCanvas.current.height = imageSize.height;
 
-  }, [width, height]);
+  }, [imageSize.width, imageSize.height]);
 
   useEffect(() => {
     if(!refCanvas || !refCanvas.current) {
@@ -65,7 +66,7 @@ function CanvasRendering({ stripes, padding, width, height, backgroundColor } : 
       return;
     }
     render(context, stripes);
-  }, [stripes, width, height, render]);
+  }, [stripes, imageSize.width, imageSize.height, render]);
 
   useEffect(() => {
     if(!refCanvas || !refCanvas.current) {
