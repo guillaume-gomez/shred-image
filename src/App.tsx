@@ -39,10 +39,31 @@ function App() {
   useOnWindowResize(() => {
     limitSize();
   });
-
-  useEffect(() => {
+  
+    useEffect(() => {
     computeMaxPadding();
   }, [imageSize])
+
+  useEffect(() => {
+    // set the canvas size to image size
+    if(!threeJsMode) {
+      //resize to fit maxSize
+      if(imageSize.width > maxWidth) {
+        const ratio = maxWidth/imageSize.width;
+        setWidth(maxWidth);
+        setHeight(imageSize.height * ratio);
+
+      } else if(imageSize.height > maxHeight) {
+        const ratio = maxHeight/imageSize.height;
+        setHeight(maxHeight);
+        setWidth(imageSize.width * ratio);
+      }
+      else {
+        setWidth(imageSize.width);
+        setHeight(imageSize.height);
+      }
+    }
+  }, [threeJsMode, stripes, imageSize])
 
   function onChangeStripe(base64Stripes: string[], imageSize: ImageSize) {
     const stripesData = base64Stripes.map(((base64Data, index) => {
@@ -61,6 +82,7 @@ function App() {
 
     const newPredefinedWidth = newWidth - 50;
     setWidth(newPredefinedWidth);
+    // we assume the avaible size respect the ratio 16/9
     setHeight(newPredefinedWidth * 9/16);
 
   }
@@ -79,6 +101,7 @@ function App() {
     }
   }
 
+
   return (
     <div className="flex flex-col gap-7 bg-base-200">
       <Header />
@@ -89,6 +112,7 @@ function App() {
               graScale={grayScale}
               nbStripes={nbStripes}
               onChangeStripe={onChangeStripe}
+              onChangeBackground={(backgroundColor: string) => setBackgroundColor(backgroundColor)}
             />
                <Slider
                 min={1}
@@ -96,20 +120,6 @@ function App() {
                 value={nbStripes}
                 onChange={(newValue) => setNbStripes(newValue)}
                 label="Number of stripes"
-              />
-              <Slider
-                min={100}
-                max={maxWidth}
-                value={width}
-                onChange={(newValue) => setWidth(newValue)}
-                label="Width"
-              />
-              <Slider
-                min={100}
-                max={maxHeight}
-                value={height}
-                onChange={(newValue) => setHeight(newValue)}
-                label="Height"
               />
               <Slider
                 min={0}
