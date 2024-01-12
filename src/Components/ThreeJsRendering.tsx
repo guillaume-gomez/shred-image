@@ -1,6 +1,6 @@
 import React, { useRef , useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Stage } from '@react-three/drei';
+import { OrbitControls, Stage, Grid } from '@react-three/drei';
 import { useFullscreen } from "rooks";
 import ThreeJsStripe from "./ThreeJsStripe";
 import { stripeDataInterface, ImageSize } from "../interfaces";
@@ -25,7 +25,6 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
   const normelizedPadding =useMemo(() => padding/imageSize.width, [padding, imageSize.width]);
   const stripeWidth = useMemo(() => ((imageSize.width - totalPadding)/stripes.length)/imageSize.width, [imageSize.width, stripes, totalPadding]);
   const shapeWidth = useMemo(() => stripes.length *(stripeWidth + normelizedPadding), [stripes, stripeWidth, normelizedPadding]);
-  console.log(imageSize)
   // before stripes are cut
   if(stripes.length === 0) {
     return (
@@ -53,11 +52,8 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
         <color attach="background" args={[backgroundColor]} />
         <OrbitControls makeDefault />
         <pointLight position={[10, 10, 10]} />
-        <Stage environment={null}>
-        <group
-          position={[-shapeWidth/2
-            , 0, 0]}
-        >
+        {/*<Grid />*/}
+        <Stage environment={null} adjustCamera shadows="contact">
           {
             stripes.map((stripe, index) => {
               return <ThreeJsStripe
@@ -69,7 +65,6 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
                      />
             })
           }
-        </group>
         </Stage>
       </Canvas>
       <img className="absolute opacity-75" src={PanCursor} width="44px" />
