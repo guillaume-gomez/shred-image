@@ -20,6 +20,7 @@ function App() {
   const [width, setWidth] = useState<number>(500);
   const [height, setHeight] = useState<number>(500);
   const [padding, setPadding] = useState<number>(4);
+  const [maxPadding, setMaxPadding] = useState<number>(100);
   const [depth, setDepth] = useState<number>(0.2);
   const [grayScale, setGrayScale] = useState<boolean>(false);
   const [threeJsMode, setThreeJsMode] = useState<boolean>(true);
@@ -38,6 +39,10 @@ function App() {
   useOnWindowResize(() => {
     limitSize();
   });
+  
+    useEffect(() => {
+    computeMaxPadding();
+  }, [imageSize])
 
   useEffect(() => {
     // set the canvas size to image size
@@ -87,6 +92,15 @@ function App() {
     setStripes(stripeData);
   }
 
+  function computeMaxPadding() {
+    const stripeWidth = imageSize.width / nbStripes;
+    const maxPadding = Math.max(Math.floor(stripeWidth - 10), 10);
+    setMaxPadding(maxPadding);
+    if(maxPadding < padding) {
+      setPadding(maxPadding);
+    }
+  }
+
 
   return (
     <div className="flex flex-col gap-7 bg-base-200">
@@ -109,7 +123,7 @@ function App() {
               />
               <Slider
                 min={0}
-                max={100}
+                max={maxPadding}
                 value={padding}
                 onChange={(newValue) => setPadding(newValue)}
                 label="Spacing"
