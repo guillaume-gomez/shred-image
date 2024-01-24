@@ -1,5 +1,6 @@
 import React, { useEffect,  useRef, useCallback } from 'react';
 import { stripeDataInterface, ImageSize } from "../interfaces";
+import SaveButton from "./SaveButton";
 
 interface CanvasRenderingProps {
   stripes: stripeDataInterface[];
@@ -80,9 +81,14 @@ function CanvasRendering({ stripes, padding, width, height, backgroundColor, ima
   }
 
   return (
-    <canvas
-      ref={refCanvas}
-    />
+    <div className="flex flex-col gap-3">
+      <canvas
+        ref={refCanvas}
+      />
+      <div>
+        <SaveButton canvas={refCanvas} />
+      </div>
+    </div>
   );
 }
 
