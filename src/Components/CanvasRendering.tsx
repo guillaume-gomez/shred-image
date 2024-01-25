@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect,  useRef, useCallback } from 'react';
 import { stripeDataInterface, ImageSize } from "../interfaces";
+import SaveButton from "./SaveButton";
 
 interface CanvasRenderingProps {
   stripes: stripeDataInterface[];
@@ -13,9 +14,12 @@ interface CanvasRenderingProps {
 function CanvasRendering({ stripes, padding, width, height, backgroundColor, imageSize } : CanvasRenderingProps) {
   const refCanvas = useRef<HTMLCanvasElement>(null);
   const render = useCallback((context : CanvasRenderingContext2D, stripes: stripeDataInterface[]) => {
+    
+    const [computedWidth, computedHeight] = computeWidthAndHeightRatio();
+
     const totalPadding = stripes.length * padding;
-    const stripeWidth = (width - totalPadding) / stripes.length;
-    context.clearRect(0,0, width, height);
+    const stripeWidth = (computedWidth - totalPadding) / stripes.length;
+    context.clearRect(0,0, computedWidth, computedHeight);
 
     stripes.forEach((stripe, index) => {
       let image = new Image();
@@ -30,7 +34,7 @@ function CanvasRendering({ stripes, padding, width, height, backgroundColor, ima
           index * (stripeWidth + padding),
           0,
           stripeWidth,
-          height
+          computedHeight
         );
       }
     });
@@ -44,29 +48,15 @@ function CanvasRendering({ stripes, padding, width, height, backgroundColor, ima
     refCanvas.current.style.background = backgroundColor;
   }, [backgroundColor])
 
-  useEffect(() => {
+   useEffect(() => {
     if(!refCanvas || !refCanvas.current) {
       console.error("Cannot find the canvas in CanvasRendering");
       return;
     }
-    refCanvas.current.width = width;
-    refCanvas.current.height = height;
-
-  }, [width, height]);
-
-  useEffect(() => {
-    if(!refCanvas || !refCanvas.current) {
-      console.error("Cannot find the canvas in CanvasRendering");
-      return;
-    }
-    const context = refCanvas.current.getContext("2d");
-
-    if(!context) {
-      console.log("Could not find context")
-      return;
-    }
-    render(context, stripes);
-  }, [stripes, render]);
+    const [computedWidth, computedHeight] = computeWidthAndHeightRatio();
+    refCanvas.current.width = computedWidth;
+    refCanvas.current.height = computedHeight;
+  }, [width, height, imageSize])
 
   useEffect(() => {
     if(!refCanvas || !refCanvas.current) {
@@ -80,12 +70,25 @@ function CanvasRendering({ stripes, padding, width, height, backgroundColor, ima
       return;
     }
     render(context, stripes);
-  }, [padding, stripes, render])
+  }, [padding, stripes, render]);
+
+  function computeWidthAndHeightRatio() : [number, number] {
+    const computedWidth = Math.min(width, imageSize.width);
+    const computedHeight = Math.min(height, imageSize.height);
+    const ratioHeight = computedHeight/computedWidth;
+    const heightWidthRadio = computedWidth * ratioHeight;
+    return [computedWidth, heightWidthRadio];
+  }
 
   return (
-    <canvas
-      ref={refCanvas}
-    />
+    <div className="flex flex-col gap-3">
+      <canvas
+        ref={refCanvas}
+      />
+      <div>
+        <SaveButton canvas={refCanvas} />
+      </div>
+    </div>
   );
 }
 
