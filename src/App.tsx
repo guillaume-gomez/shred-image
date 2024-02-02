@@ -20,6 +20,7 @@ function App() {
   const [width, setWidth] = useState<number>(500);
   const [height, setHeight] = useState<number>(500);
   const [padding, setPadding] = useState<number>(4);
+  const [maxPadding, setMaxPadding] = useState<number>(100);
   const [depth, setDepth] = useState<number>(0.2);
   const [grayScale, setGrayScale] = useState<boolean>(false);
   const [threeJsMode, setThreeJsMode] = useState<boolean>(true);
@@ -38,6 +39,31 @@ function App() {
   useOnWindowResize(() => {
     limitSize();
   });
+  
+    useEffect(() => {
+    computeMaxPadding();
+  }, [imageSize])
+
+  useEffect(() => {
+    // set the canvas size to image size
+    if(!threeJsMode) {
+      //resize to fit maxSize
+      if(imageSize.width > maxWidth) {
+        const ratio = maxWidth/imageSize.width;
+        setWidth(maxWidth);
+        setHeight(imageSize.height * ratio);
+
+      } else if(imageSize.height > maxHeight) {
+        const ratio = maxHeight/imageSize.height;
+        setHeight(maxHeight);
+        setWidth(imageSize.width * ratio);
+      }
+      else {
+        setWidth(imageSize.width);
+        setHeight(imageSize.height);
+      }
+    }
+  }, [threeJsMode, stripes, imageSize])
 
   function onChangeStripe(base64Stripes: string[], imageSize: ImageSize) {
     const stripesData = base64Stripes.map(((base64Data, index) => {
@@ -56,6 +82,7 @@ function App() {
 
     const newPredefinedWidth = newWidth - 50;
     setWidth(newPredefinedWidth);
+    // we assume the avaible size respect the ratio 16/9
     setHeight(newPredefinedWidth * 9/16);
 
   }
@@ -64,6 +91,16 @@ function App() {
     const stripeData = sortBy(stripes, 'index');
     setStripes(stripeData);
   }
+
+  function computeMaxPadding() {
+    const stripeWidth = imageSize.width / nbStripes;
+    const maxPadding = Math.max(Math.floor(stripeWidth - 10), 10);
+    setMaxPadding(maxPadding);
+    if(maxPadding < padding) {
+      setPadding(maxPadding);
+    }
+  }
+
 
   return (
     <div className="flex flex-col gap-7 bg-base-200">
@@ -85,22 +122,8 @@ function App() {
                 label="Number of stripes"
               />
               <Slider
-                min={100}
-                max={maxWidth}
-                value={width}
-                onChange={(newValue) => setWidth(newValue)}
-                label="Width"
-              />
-              <Slider
-                min={100}
-                max={maxHeight}
-                value={height}
-                onChange={(newValue) => setHeight(newValue)}
-                label="Height"
-              />
-              <Slider
                 min={0}
-                max={100}
+                max={maxPadding}
                 value={padding}
                 onChange={(newValue) => setPadding(newValue)}
                 label="Spacing"
