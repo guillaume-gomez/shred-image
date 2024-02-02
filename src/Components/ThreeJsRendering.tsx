@@ -51,7 +51,6 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
       >
         <color attach="background" args={[backgroundColor]} />
         <OrbitControls makeDefault />
-        <pointLight position={[10, 10, 10]} />
         {/*<Grid />*/}
         <Stage environment={null} adjustCamera shadows="contact">
           {
