@@ -6,6 +6,7 @@ import ThreeJsStripe from "./ThreeJsStripe";
 import { stripeDataInterface, ImageSize } from "../interfaces";
 import PanCursor from "../panCursor.png";
 import Help3D from "./Help3D";
+import { useDoubleTap } from 'use-double-tap';
 
 
 interface ThreejsRenderingProps {
@@ -19,8 +20,11 @@ interface ThreejsRenderingProps {
 }
 
 function ThreejsRendering({ stripes, padding, width, height, depth, backgroundColor, imageSize } : ThreejsRenderingProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { toggleFullscreen } = useFullscreen({ target: canvasRef });
+  const ContainerCanvasRef = useRef<HTMLDivElement>(null);
+  const { toggleFullscreen } = useFullscreen({ target: ContainerCanvasRef });
+    const doubleTapEvent = useDoubleTap(() => {
+      toggleFullscreen();
+  });
   const totalPadding = useMemo(() => stripes.length * padding, [stripes, padding]);
   const normelizedPadding =useMemo(() => padding/imageSize.width, [padding, imageSize.width]);
   const stripeWidth = useMemo(() => ((imageSize.width - totalPadding)/stripes.length)/imageSize.width, [imageSize.width, stripes, totalPadding]);
@@ -42,34 +46,37 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
 
   return (
     <div className="flex flex-col gap-5 w-full">
-      <Canvas
-        camera={{ position: [0, 0.0, 1], fov: 75, far: 5 }}
-        dpr={window.devicePixelRatio}
-        onDoubleClick={toggleFullscreen}
-        ref={canvasRef}
-        style={{width, height}}
+      <div
+         className="h-screen w-full"
+        ref={ContainerCanvasRef}
+      {...doubleTapEvent}
       >
-        <color attach="background" args={[backgroundColor]} />
-        <OrbitControls makeDefault />
-        {/*<Grid />*/}
-        <Stage environment={null} adjustCamera shadows="contact">
-          {
-            stripes.map((stripe, index) => {
-              return <ThreeJsStripe
-                        key={stripe.index}
-                        stripeWidth={stripeWidth}
-                        stripeHeight={imageSize.height/imageSize.width}
-                        base64Texture={stripe.base64Data}
-                        meshProps={{position:[(index * (stripeWidth + normelizedPadding)), 0, randomRange(0, depth)]}}
-                     />
-            })
-          }
-        </Stage>
-      </Canvas>
+        <Canvas
+          camera={{ position: [0, 0.0, 1], fov: 75, far: 5 }}
+          dpr={window.devicePixelRatio}
+        >
+          <color attach="background" args={[backgroundColor]} />
+          <OrbitControls makeDefault />
+          {/*<Grid />*/}
+          <Stage environment={null} adjustCamera shadows="contact">
+            {
+              stripes.map((stripe, index) => {
+                return <ThreeJsStripe
+                          key={stripe.index}
+                          stripeWidth={stripeWidth}
+                          stripeHeight={imageSize.height/imageSize.width}
+                          base64Texture={stripe.base64Data}
+                          meshProps={{position:[(index * (stripeWidth + normelizedPadding)), 0, randomRange(0, depth)]}}
+                       />
+              })
+            }
+          </Stage>
+        </Canvas>
+      </div>
       <img className="absolute opacity-75" src={PanCursor} width="44px" />
       <Help3D />
       <ul className="text-xs">
-        <li>Double click to switch to fullscreen</li>
+        <li>Double click/tap to switch to fullscreen</li>
         <li>Use your mouse or finger to move the camera</li>
       </ul>
     </div>
