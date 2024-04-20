@@ -47,9 +47,9 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
   return (
     <div className="flex flex-col gap-5 w-full">
       <div
-         className="h-screen w-full"
+        className="h-screen w-full"
         ref={ContainerCanvasRef}
-      {...doubleTapEvent}
+        {...doubleTapEvent}
       >
         <Canvas
           camera={{ position: [0, 0.0, 1], fov: 75, far: 5 }}
