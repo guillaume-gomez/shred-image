@@ -15,7 +15,7 @@ function ColorInput({ label, value, onChange } : ColorInputProps ) {
         {label}
         <div className="badge badge-accent">{value}</div>
       </label>
-      <input id="colorInput" className="w-12" type="color" value={value} onChange={(e) => onChange(e.target.value)} />
+      <input id="colorInput" className="w-12 h-12" type="color" value={value} onChange={(e) => onChange(e.target.value)} />
     </div>
   );
 }
