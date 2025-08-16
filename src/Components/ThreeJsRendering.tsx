@@ -48,9 +48,18 @@ function ThreejsRendering({ stripes, padding, width, height, depth, backgroundCo
         onDoubleClick={toggleFullscreen}
         ref={canvasRef}
         style={{width, height}}
+        className="hover:cursor-grabbing"
       >
         <color attach="background" args={[backgroundColor]} />
-        <OrbitControls makeDefault />
+        <OrbitControls 
+          makeDefault
+          autoRotate
+          autoRotateSpeed={0.25}
+          minAzimuthAngle={-Math.PI}
+          maxAzimuthAngle={Math.PI}
+          minPolarAngle={Math.PI/4}
+          maxPolarAngle={Math.PI / 1.9}
+        />
         {/*<Grid />*/}
         <Stage environment={null} adjustCamera shadows="contact">
           {
